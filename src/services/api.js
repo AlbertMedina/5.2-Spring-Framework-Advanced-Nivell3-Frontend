@@ -9,13 +9,15 @@ export async function loginUser(loginIdentifier, password) {
 
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(err.message || "Error de login");
+    throw new Error(err.message || "Login Error");
   }
 
   return await res.json();
 }
 
 export async function registerUser({ name, surname, username, email, password }) {
+  console.log("1");
+
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -24,7 +26,7 @@ export async function registerUser({ name, surname, username, email, password })
 
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(err.message || "Error de registre");
+    throw new Error(err.message || "Register Error");
   }
 
   return await res.json();

@@ -27,6 +27,10 @@ export default function Login() {
     }
   };
 
+  const handleRegister = () => {
+    navigate("/register");
+  };
+
   return (
     <Container maxWidth="sm">
       <Box
@@ -46,7 +50,7 @@ export default function Login() {
           sx={{ width: "100%", mt: 1 }}
         >
           <TextField
-            label="Email o Username"
+            label="Username or Email"
             type="text"
             fullWidth
             margin="normal"
@@ -76,6 +80,15 @@ export default function Login() {
             sx={{ mt: 3 }}
           >
             Entrar
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            fullWidth
+            sx={{ mt: 2 }}
+            onClick={handleRegister}
+          >
+            Register
           </Button>
         </Box>
       </Box>

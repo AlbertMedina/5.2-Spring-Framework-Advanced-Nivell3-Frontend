@@ -10,8 +10,8 @@ import Footer from "./components/core/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
-const AdminApp = lazy(() => import("./admin/AdminApp"));
-const UserApp = lazy(() => import("./user/UserApp"));
+const AdminApp = lazy(() => import("./app/AdminApp"));
+const UserApp = lazy(() => import("./app/UserApp"));
 
 function AppRoutes() {
   const { role, loading } = useContext(AuthContext);

@@ -1,0 +1,81 @@
+import { NavLink } from "react-router-dom";
+import { AppBar, Toolbar, Button, Box } from "@mui/material";
+import { useContext } from "react";
+import AuthContext from "../../services/auth.context";
+
+export default function Nav() {
+  const { user, logout } = useContext(AuthContext);
+
+  return (
+    <AppBar position="fixed">
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          {!user && (
+            <>
+              <Button
+                color="inherit"
+                component={NavLink}
+                to="/login"
+              >
+                Login
+              </Button>
+              <Button
+                color="inherit"
+                component={NavLink}
+                to="/register"
+              >
+                Register
+              </Button>
+            </>
+          )}
+
+          {user?.role === "user" && (
+            <>
+              <Button
+                color="inherit"
+                component={NavLink}
+                to="/user-home"
+              >
+                User Home
+              </Button>
+              <Button
+                color="inherit"
+                component={NavLink}
+                to="/favorites"
+              >
+                Favorits
+              </Button>
+            </>
+          )}
+
+          {user?.role === "admin" && (
+            <>
+              <Button
+                color="inherit"
+                component={NavLink}
+                to="/admin-home"
+              >
+                Admin Home
+              </Button>
+              <Button
+                color="inherit"
+                component={NavLink}
+                to="/users"
+              >
+                Users List
+              </Button>
+            </>
+          )}
+        </Box>
+
+        {user && (
+          <Box>
+            <Button color="inherit" onClick={logout}>
+              Logout
+            </Button>
+          </Box>
+        )}
+      </Toolbar>
+    </AppBar>
+  );
+}

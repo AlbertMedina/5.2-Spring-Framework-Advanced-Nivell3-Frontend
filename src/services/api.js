@@ -16,8 +16,6 @@ export async function loginUser(loginIdentifier, password) {
 }
 
 export async function registerUser({ name, surname, username, email, password }) {
-  console.log("1");
-
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -46,4 +44,53 @@ export async function getMe(token) {
   }
 
   return await res.json();
+}
+
+export async function getUser(token, userId) {
+  const res = await fetch(`${API_URL}/users/${userId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Cannot get user ${userId}`);
+  }
+
+  return await res.json();
+}
+
+export async function getAllUsers(token) {
+  const res = await fetch(`${API_URL}/users`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Cannot get all users");
+  }
+
+  return await res.json();
+}
+
+export async function removeUser(token, userId) {
+  const res = await fetch(`${API_URL}/users/${userId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Cannot delete user ${userId}`);
+  }
+
+  return true;
 }

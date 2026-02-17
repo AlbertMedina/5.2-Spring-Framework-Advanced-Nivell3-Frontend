@@ -1,55 +1,65 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
-  Button,
   Typography,
   Box,
   CircularProgress,
 } from "@mui/material";
-import { getAllUsers, removeUser } from "../../services/api";
-import { useContext } from "react";
+import { getAllUsers } from "../../services/api";
 import AuthContext from "../../services/auth.context";
+import { useNavigate } from "react-router-dom";
 
 export default function Users() {
   const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [removing, setRemoving] = useState(null);
   const [error, setError] = useState("");
 
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const data = await getAllUsers(token);
-      setUsers(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    if (!token) return;
+
+    let cancelled = false;
+
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await getAllUsers(token);
+
+        if (!cancelled) {
+          setUsers(data);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err.message);
+          setUsers([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
     fetchUsers();
-  }, []);
 
-  const handleRemove = async (userId) => {
-    if (!window.confirm("Are you sure yo want to remove this user?")) return;
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
-    try {
-      setRemoving(userId);
-      await removeUser(token, userId);
-      setUsers(users.filter((u) => u.id !== userId));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setRemoving(null);
-    }
-  };
-
-  if (loading) return <CircularProgress />;
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
@@ -65,24 +75,21 @@ export default function Users() {
 
       <List>
         {users.map((user) => (
-          <ListItem
+          <ListItemButton
             key={user.id}
-            secondaryAction={
-              <Button
-                variant="contained"
-                color="error"
-                size="small"
-                onClick={() => handleRemove(user.id)}
-                disabled={removing === user.id}
-              >
-                {removing === user.id ? "Removing..." : "Remove"}
-              </Button>
-            }
+            onClick={() => navigate(`/users/${user.id}`)}
           >
-            <ListItemText primary={user.username} />
-          </ListItem>
+            <ListItemText
+              primary={`${user.name} ${user.surname}`}
+              secondary={`@${user.username}`}
+            />
+          </ListItemButton>
         ))}
       </List>
+
+      {!users.length && !error && (
+        <Typography>No users found</Typography>
+      )}
     </Box>
   );
 }

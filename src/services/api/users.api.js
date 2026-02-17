@@ -13,6 +13,11 @@ export async function getMe(token) {
     });
 
     if (!res.ok) {
+        if (res.status === 401) {
+            forceLogOut();
+            return;
+        }
+
         const err = await res.json().catch(() => ({}));
         throw new Error(err.message || "Cannot get user info");
     }
@@ -26,6 +31,11 @@ export async function getUser(token, userId) {
     });
 
     if (!res.ok) {
+        if (res.status === 401) {
+            forceLogOut();
+            return;
+        }
+
         const err = await res.json().catch(() => ({}));
         throw new Error(err.message || `Cannot get user ${userId}`);
     }
@@ -39,6 +49,11 @@ export async function getAllUsers(token) {
     });
 
     if (!res.ok) {
+        if (res.status === 401) {
+            forceLogOut();
+            return;
+        }
+
         const err = await res.json().catch(() => ({}));
         throw new Error(err.message || "Cannot get all users");
     }
@@ -53,9 +68,20 @@ export async function removeUser(token, userId) {
     });
 
     if (!res.ok) {
+        if (res.status === 401) {
+            forceLogOut();
+            return;
+        }
+
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || `Cannot delete user ${userId}`);
+        throw new Error(err.message || `Cannot remove user ${userId}`);
     }
 
     return true;
+}
+
+function forceLogOut(){
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    window.location.href = "/login";
 }

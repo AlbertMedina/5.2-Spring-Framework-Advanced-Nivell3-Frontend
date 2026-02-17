@@ -7,6 +7,7 @@ function authHeaders(token) {
 }
 
 export async function getAllMovies({
+  token,
   page,
   size,
   genre,
@@ -26,77 +27,27 @@ export async function getAllMovies({
   if (title) params.append("title", title);
   if (onlyAvailable) params.append("onlyAvailable", true);
 
-  const res = await fetch(`${API_URL}/movies?${params.toString()}`);
+  const res = await fetch(`${API_URL}/movies?${params.toString()}`, {
+    headers: authHeaders(token),
+  });
 
   if (!res.ok) {
-    const err = await res.json();
+    const err = await res.json().catch(() => ({}));
     throw new Error(err.message || "Cannot get movies");
   }
 
   return await res.json();
 }
 
-export async function getMovie(movieId) {
-  const res = await fetch(`${API_URL}/movies/${movieId}`);
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Cannot get movie");
-  }
-
-  return await res.json();
-}
-
-export async function addMovie(token, movieData, posterFile) {
-  const formData = new FormData();
-  formData.append("movie", new Blob([JSON.stringify(movieData)], { type: "application/json" }));
-
-  if (posterFile) {
-    formData.append("poster", posterFile);
-  }
-
-  const res = await fetch(`${API_URL}/movies`, {
-    method: "POST",
-    headers: authHeaders(token),
-    body: formData,
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Cannot add movie");
-  }
-
-  return await res.json();
-}
-
-export async function updateMovie(token, movieId, updateData) {
-  const res = await fetch(`${API_URL}/movies/${movieId}`, {
-    method: "PUT",
-    headers: {
-      ...authHeaders(token),
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(updateData),
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Cannot update movie");
-  }
-
-  return await res.json();
-}
-
-export async function removeMovie(token, movieId) {
-  const res = await fetch(`${API_URL}/movies/${movieId}`, {
-    method: "DELETE",
+export async function getGenres(token) {
+  const res = await fetch(`${API_URL}/movies/genres`, {
     headers: authHeaders(token),
   });
 
   if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Cannot delete movie");
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Cannot get genres");
   }
 
-  return true;
+  return await res.json();
 }

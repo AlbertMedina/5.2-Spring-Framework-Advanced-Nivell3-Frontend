@@ -10,6 +10,9 @@ export default function AdminNav() {
     <AppBar position="fixed">
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", gap: 2 }}>
+          <Button color="inherit" component={NavLink} to="/movies">
+            Movies
+          </Button>
           <Button color="inherit" component={NavLink} to="/users">
             Users
           </Button>

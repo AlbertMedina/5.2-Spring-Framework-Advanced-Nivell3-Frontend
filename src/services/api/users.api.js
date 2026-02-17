@@ -80,7 +80,7 @@ export async function removeUser(token, userId) {
     return true;
 }
 
-function forceLogOut(){
+function forceLogOut() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     window.location.href = "/login";

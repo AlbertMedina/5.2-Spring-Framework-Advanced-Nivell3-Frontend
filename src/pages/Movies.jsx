@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -12,34 +13,35 @@ import {
   FormControlLabel,
   Button,
   Grid,
-  Paper,
 } from "@mui/material";
-import { getAllMovies, getGenres } from "../../services/api";
-import AuthContext from "../../services/auth.context";
+import { getAllMovies, getGenres, removeMovie } from "../services/api";
+import AuthContext from "../services/auth.context";
+import MovieCard from "../components/shared/MovieCard";
+import AddMovieCard from "../components/admin/AddMovieCard";
+import AddMovieModal from "../components/admin/AddMovieModal";
 
 export default function Movies() {
-  const { token } = useContext(AuthContext);
+  const { token, role } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const pageSize = 10;
 
-  // filtres
   const [titleFilter, setTitleFilter] = useState("");
   const [genreFilter, setGenreFilter] = useState("");
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const [sortBy, setSortBy] = useState("TITLE");
   const [ascending, setAscending] = useState(true);
-
   const [genres, setGenres] = useState([]);
 
-  // Fetch genres
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const isAdmin = role === "ADMIN";
+
   useEffect(() => {
     if (!token) return;
-
     const fetchGenres = async () => {
       try {
         const data = await getGenres(token);
@@ -48,47 +50,36 @@ export default function Movies() {
         console.error(err);
       }
     };
-
     fetchGenres();
   }, [token]);
 
-  // Fetch movies
-  useEffect(() => {
+  const fetchMovies = async () => {
     if (!token) return;
-    let cancelled = false;
+    try {
+      setLoading(true);
+      setError("");
+      const data = await getAllMovies({
+        token,
+        page,
+        size: pageSize,
+        genre: genreFilter,
+        onlyAvailable,
+        title: titleFilter,
+        sortBy,
+        ascending,
+      });
+      setMovies(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const fetchMovies = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const data = await getAllMovies({
-          token,
-          page,
-          size: pageSize,
-          genre: genreFilter || undefined,
-          onlyAvailable,
-          title: titleFilter || undefined,
-          sortBy,
-          ascending,
-        });
-
-        if (!cancelled) setMovies(data);
-      } catch (err) {
-        if (!cancelled) setError(err.message);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
+  useEffect(() => {
     fetchMovies();
-
-    return () => {
-      cancelled = true;
-    };
   }, [token, page, titleFilter, genreFilter, onlyAvailable, sortBy, ascending]);
 
-  // Handlers filtres
   const handleTitleChange = (e) => setTitleFilter(e.target.value);
   const handleGenreChange = (e) => setGenreFilter(e.target.value);
   const handleOnlyAvailableChange = (e) => setOnlyAvailable(e.target.checked);
@@ -96,13 +87,23 @@ export default function Movies() {
   const handleAscendingChange = (e) => setAscending(e.target.value === "asc");
   const handlePageChange = (newPage) => setPage(newPage);
 
+  const handleDelete = async (movieId) => {
+    if (!window.confirm("Are you sure you want to delete this movie?")) return;
+    try {
+      await removeMovie(token, movieId);
+      setMovies(movies.filter((m) => m.id !== movieId));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   return (
-    <Box sx={{ maxWidth: 900, mx: "auto", mt: 4 }}>
+    <Box sx={{ maxWidth: 900, mx: "auto", mt: 10, textAlign: "center" }}>
       <Typography variant="h5" gutterBottom>
         Movies
       </Typography>
 
-      <Grid container spacing={2} sx={{ mb: 2 }}>
+      <Grid container spacing={2} justifyContent="center" sx={{ mb: 10 }}>
         <Grid item xs={12} sm={4}>
           <TextField
             label="Search by title"
@@ -111,11 +112,14 @@ export default function Movies() {
             fullWidth
           />
         </Grid>
-
         <Grid item xs={12} sm={3}>
           <FormControl fullWidth>
             <InputLabel>Genre</InputLabel>
-            <Select value={genreFilter} onChange={handleGenreChange} label="Genre">
+            <Select
+              value={genreFilter}
+              onChange={handleGenreChange}
+              label="Genre"
+            >
               <MenuItem value="">All</MenuItem>
               {genres.map((g) => (
                 <MenuItem key={g} value={g}>
@@ -125,17 +129,19 @@ export default function Movies() {
             </Select>
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sm={2}>
           <FormControl fullWidth>
             <InputLabel>Sort by</InputLabel>
-            <Select value={sortBy} onChange={handleSortByChange} label="Sort by">
+            <Select
+              value={sortBy}
+              onChange={handleSortByChange}
+              label="Sort by"
+            >
               <MenuItem value="TITLE">Title</MenuItem>
               <MenuItem value="RATING">Rating</MenuItem>
             </Select>
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sm={1}>
           <FormControl fullWidth>
             <InputLabel>Order</InputLabel>
@@ -149,10 +155,23 @@ export default function Movies() {
             </Select>
           </FormControl>
         </Grid>
-
-        <Grid item xs={12} sm={2} sx={{ display: "flex", alignItems: "center" }}>
+        <Grid
+          item
+          xs={12}
+          sm={2}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <FormControlLabel
-            control={<Checkbox checked={onlyAvailable} onChange={handleOnlyAvailableChange} />}
+            control={
+              <Checkbox
+                checked={onlyAvailable}
+                onChange={handleOnlyAvailableChange}
+              />
+            }
             label="Only available"
           />
         </Grid>
@@ -161,17 +180,31 @@ export default function Movies() {
       {loading && <CircularProgress />}
       {error && <Typography color="error">{error}</Typography>}
 
+      {isAdmin && (
+        <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenAddModal(true)}
+          >
+            Add Movie
+          </Button>
+        </Box>
+      )}
+
       {!loading && !error && (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} justifyContent="center">
+          {isAdmin && (
+            <Grid item xs={12} sm={6} key={"add-movie-card"}>
+              <AddMovieCard onClick={() => setOpenAddModal(true)} />
+            </Grid>
+          )}
           {movies.map((movie) => (
             <Grid item xs={12} sm={6} key={movie.id}>
-              <Paper sx={{ p: 2 }}>
-                <Typography variant="subtitle1">{movie.title}</Typography>
-                <Typography variant="body2">
-                  {movie.genre} | {movie.year} | {movie.duration} min
-                </Typography>
-                <Typography variant="body2">Director: {movie.director}</Typography>
-              </Paper>
+              <MovieCard
+                movie={movie}
+                onClick={(movieId) => navigate(`/movies/${movieId}`)}
+              />
             </Grid>
           ))}
         </Grid>
@@ -180,16 +213,24 @@ export default function Movies() {
       <Box sx={{ mt: 4, display: "flex", justifyContent: "center", gap: 1 }}>
         <Button
           variant="outlined"
-          disabled={page === 1}
+          disabled={page === 0}
           onClick={() => handlePageChange(page - 1)}
         >
           Previous
         </Button>
-        <Typography sx={{ mt: 1 }}>Page {page}</Typography>
+        <Typography sx={{ mt: 1 }}>Page {page + 1}</Typography>
         <Button variant="outlined" onClick={() => handlePageChange(page + 1)}>
           Next
         </Button>
       </Box>
+
+      <AddMovieModal
+        open={openAddModal}
+        onClose={() => setOpenAddModal(false)}
+        token={token}
+        genres={genres}
+        onMovieAdded={fetchMovies}
+      />
     </Box>
   );
 }

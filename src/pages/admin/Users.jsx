@@ -87,9 +87,7 @@ export default function Users() {
         ))}
       </List>
 
-      {!users.length && !error && (
-        <Typography>No users found</Typography>
-      )}
+      {!users.length && !error && <Typography>No users found</Typography>}
     </Box>
   );
 }

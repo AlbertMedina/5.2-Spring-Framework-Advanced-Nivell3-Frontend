@@ -180,18 +180,6 @@ export default function Movies() {
       {loading && <CircularProgress />}
       {error && <Typography color="error">{error}</Typography>}
 
-      {isAdmin && (
-        <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setOpenAddModal(true)}
-          >
-            Add Movie
-          </Button>
-        </Box>
-      )}
-
       {!loading && !error && (
         <Grid container spacing={2} justifyContent="center">
           {isAdmin && (

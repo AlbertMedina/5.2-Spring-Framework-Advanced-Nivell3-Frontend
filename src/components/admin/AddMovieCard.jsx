@@ -22,7 +22,7 @@ export default function AddMovieCard({ onClick }) {
           borderRadius: 2,
           overflow: "hidden",
           "&:hover .add-icon": {
-            transform: "translate(-50%, -50%) scale(1.5)",
+            transform: "translate(-50%, -50%) scale(1.3)",
           },
         }}
       >
@@ -44,7 +44,7 @@ export default function AddMovieCard({ onClick }) {
             position: "absolute",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%) scale(1.1)",
+            transform: "translate(-50%, -50%) scale(1.0)",
             color: "white",
             fontSize: 100,
             transition: "transform 0.4s ease",

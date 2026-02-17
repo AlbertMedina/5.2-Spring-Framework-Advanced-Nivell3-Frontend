@@ -27,13 +27,17 @@ const theme = createTheme({
       paper: "#fff",
     },
     text: {
-      primary: "#333",
-      secondary: "#555",
+      primary: "#f5f5f5",
+      secondary: "#333",
     },
   },
   typography: {
+    body1: {
+      fontSize: "1.3rem",
+      color: "#f5f5f5",
+    },
     body2: {
-      fontSize: "0.9rem",
+      fontSize: "1.0rem",
       color: "#f5f5f5",
     },
   },

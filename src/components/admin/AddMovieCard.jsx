@@ -1,6 +1,6 @@
 import { Box, ButtonBase } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import backgroundImage from "../../assets/movie-default-bg.webp";
+import backgroundImage from "../../assets/background-movie.webp";
 
 export default function AddMovieCard({ onClick }) {
   return (

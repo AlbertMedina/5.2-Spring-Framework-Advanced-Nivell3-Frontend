@@ -1,5 +1,5 @@
 import { Paper, Typography, Box, ButtonBase } from "@mui/material";
-import defaultPoster from "../../assets/movie-default-bg.webp";
+import defaultPoster from "../../assets/background-movie.webp";
 
 export default function MovieCard({ movie, onClick }) {
   return (

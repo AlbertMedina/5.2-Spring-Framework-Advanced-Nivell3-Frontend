@@ -1,4 +1,5 @@
 import { Paper, Typography, Box, ButtonBase } from "@mui/material";
+import defaultPoster from "../../assets/movie-default-bg.webp";
 
 export default function MovieCard({ movie, onClick }) {
   return (
@@ -34,19 +35,17 @@ export default function MovieCard({ movie, onClick }) {
             position: "relative",
           }}
         >
-          {movie.posterUrl && (
-            <Box
-              component="img"
-              src={movie.posterUrl}
-              alt={movie.title}
-              sx={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-              }}
-            />
-          )}
+          <Box
+            component="img"
+            src={movie.posterUrl || defaultPoster}
+            alt={movie.title}
+            sx={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
 
           <Box
             className="details"

@@ -21,17 +21,20 @@ export default function MovieDetails() {
       try {
         setLoading(true);
         setError("");
-        const data = await getMovie(movieId);
+        const data = await getMovie(movieId, token);
         if (!cancelled) setMovie(data);
       } catch (err) {
-        if (!cancelled) setError(err.message);
+        if (!cancelled) setError(err.message || "Error fetching movie");
       } finally {
         if (!cancelled) setLoading(false);
       }
     };
 
     fetchMovie();
-    return () => (cancelled = true);
+
+    return () => {
+      cancelled = true;
+    };
   }, [token, movieId]);
 
   const isAdmin = role === "ADMIN";
@@ -42,7 +45,7 @@ export default function MovieDetails() {
       await removeMovie(token, movieId);
       navigate("/movies");
     } catch (err) {
-      alert(err.message);
+      alert(err.message || "Error deleting movie");
     }
   };
 
@@ -56,15 +59,25 @@ export default function MovieDetails() {
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
-      <Typography variant="h4" gutterBottom>{movie.title}</Typography>
-      <Typography variant="body1">{movie.genre} | {movie.year} | {movie.duration} min</Typography>
+      <Typography variant="h4" gutterBottom>
+        {movie.title}
+      </Typography>
+      <Typography variant="body1">
+        {movie.genre} | {movie.year} | {movie.duration} min
+      </Typography>
       <Typography variant="body1">Director: {movie.director}</Typography>
-      <Typography variant="body2" sx={{ mt: 2 }}>{movie.description}</Typography>
+      <Typography variant="body2" sx={{ mt: 2 }}>
+        {movie.description}
+      </Typography>
 
       {isAdmin && (
         <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
-          <Button variant="outlined" color="primary" onClick={handleEdit}>Edit</Button>
-          <Button variant="outlined" color="error" onClick={handleDelete}>Delete</Button>
+          <Button variant="outlined" color="primary" onClick={handleEdit}>
+            Edit
+          </Button>
+          <Button variant="outlined" color="error" onClick={handleDelete}>
+            Delete
+          </Button>
         </Box>
       )}
     </Box>

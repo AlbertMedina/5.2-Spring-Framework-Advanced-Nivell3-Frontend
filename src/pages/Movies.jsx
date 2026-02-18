@@ -179,7 +179,7 @@ export default function Movies() {
               <Grid item xs={12} sm={6} key={movie.id}>
                 <MovieCard
                   movie={movie}
-                  onClick={(movieId) => navigate(`/movies/${movieId}`)}
+                  onClick={() => navigate(`/movies/${movie.id}`)}
                 />
               </Grid>
             ))}

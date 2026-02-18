@@ -1,6 +1,13 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, Typography, Button, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+  Grid,
+  Paper,
+} from "@mui/material";
 import { getMovie, removeMovie } from "../services/api";
 import AuthContext from "../services/auth.context";
 
@@ -58,28 +65,60 @@ export default function MovieDetails() {
   if (!movie) return null;
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        {movie.title}
-      </Typography>
-      <Typography variant="body1">
-        {movie.genre} | {movie.year} | {movie.duration} min
-      </Typography>
-      <Typography variant="body1">Director: {movie.director}</Typography>
-      <Typography variant="body2" sx={{ mt: 2 }}>
-        {movie.description}
-      </Typography>
+    <Paper sx={{ maxWidth: 900, mx: "auto", mt: 10, p: 3 }}>
+      <Grid container spacing={3} alignItems="flex-start">
+        {/* Poster */}
+        <Grid item xs={12} md={4}>
+          <Box
+            component="img"
+            src={movie.posterUrl}
+            alt={movie.title}
+            sx={{
+              width: "100%",
+              maxHeight: 400, // limita l'altura
+              objectFit: "cover", // manté el ratio
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          />
+        </Grid>
 
-      {isAdmin && (
-        <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
-          <Button variant="outlined" color="primary" onClick={handleEdit}>
-            Edit
-          </Button>
-          <Button variant="outlined" color="error" onClick={handleDelete}>
-            Delete
-          </Button>
-        </Box>
-      )}
-    </Box>
+        {/* Informació */}
+        <Grid
+          item
+          xs={12}
+          md={8}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            {movie.title}
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 1 }}>
+            {movie.genre} | {movie.year} | {movie.duration} min
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            Director: {movie.director}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 3 }}>
+            {movie.description}
+          </Typography>
+
+          {isAdmin && (
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button variant="outlined" color="primary" onClick={handleEdit}>
+                Edit
+              </Button>
+              <Button variant="outlined" color="error" onClick={handleDelete}>
+                Delete
+              </Button>
+            </Box>
+          )}
+        </Grid>
+      </Grid>
+    </Paper>
   );
 }

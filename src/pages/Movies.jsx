@@ -170,13 +170,13 @@ export default function Movies() {
             sx={{ mt: 6, columnGap: 16 }}
           >
             {isAdmin && (
-              <Grid item xs={12} sm={6}>
+              <Grid>
                 <AddMovieCard onClick={() => setOpenAddModal(true)} />
               </Grid>
             )}
 
             {movies.map((movie) => (
-              <Grid item xs={12} sm={6} key={movie.id}>
+              <Grid key={movie.id}>
                 <MovieCard
                   movie={movie}
                   onClick={() => navigate(`/movies/${movie.id}`)}

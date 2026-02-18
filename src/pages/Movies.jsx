@@ -5,14 +5,6 @@ import {
   Box,
   Typography,
   CircularProgress,
-  TextField,
-  MenuItem,
-  FormControl,
-  Select,
-  InputLabel,
-  Checkbox,
-  FormControlLabel,
-  Button,
   Grid,
   IconButton,
 } from "@mui/material";
@@ -22,7 +14,11 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { getAllMovies, getGenres, removeMovie } from "../services/api";
 import AuthContext from "../services/auth.context";
 
-import MovieCard from "../components/shared/MovieCard";
+import MovieCard from "../components/movies/MovieCard";
+import GenreSelector from "../components/movies/GenreSelector";
+import SearchBox from "../components/movies/SearchBox";
+import SortToggle from "../components/movies/SortToggle";
+import HideUnavailableCheckbox from "../components/movies/HideUnavailableCheckbox.jsx";
 import AddMovieCard from "../components/admin/AddMovieCard";
 import AddMovieModal from "../components/admin/AddMovieModal";
 
@@ -34,7 +30,7 @@ export default function Movies() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [page, setPage] = useState(0);
-  const pageSize = 7;
+  const pageSize = 9;
 
   const [titleFilter, setTitleFilter] = useState("");
   const [genreFilter, setGenreFilter] = useState("");
@@ -87,27 +83,12 @@ export default function Movies() {
     fetchMovies();
   }, [token, page, titleFilter, genreFilter, onlyAvailable, sortBy, ascending]);
 
-  const handleTitleChange = (e) => setTitleFilter(e.target.value);
-  const handleGenreChange = (e) => setGenreFilter(e.target.value);
-  const handleOnlyAvailableChange = (e) => setOnlyAvailable(e.target.checked);
-  const handleSortByChange = (e) => setSortBy(e.target.value);
-  const handleAscendingChange = (e) => setAscending(e.target.value === "asc");
   const handlePageChange = (newPage) => setPage(newPage);
-
-  const handleDelete = async (movieId) => {
-    if (!window.confirm("Are you sure you want to delete this movie?")) return;
-    try {
-      await removeMovie(token, movieId);
-      setMovies(movies.filter((m) => m.id !== movieId));
-    } catch (err) {
-      alert(err.message);
-    }
-  };
 
   return (
     <Box
       sx={{
-        maxWidth: 1200,
+        maxWidth: 1800,
         mx: "auto",
         mt: 10,
         textAlign: "center",
@@ -118,89 +99,69 @@ export default function Movies() {
       }}
     >
       <Box>
-        <Typography variant="h5" gutterBottom>
-          Movies
-        </Typography>
-
-        <Grid container spacing={2} justifyContent="center" sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Search by title"
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 2,
+            mt: 4,
+            mb: 4,
+          }}
+        >
+          {/* Esquerra: Search + Genre */}
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <SearchBox
               value={titleFilter}
-              onChange={handleTitleChange}
-              fullWidth
+              onChange={(newText) => {
+                setTitleFilter(newText);
+                setPage(0);
+              }}
+              placeholder="Search by title"
+              width={400}
             />
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <FormControl fullWidth>
-              <InputLabel>Genre</InputLabel>
-              <Select
-                value={genreFilter}
-                onChange={handleGenreChange}
-                label="Genre"
-              >
-                <MenuItem value="">All</MenuItem>
-                {genres.map((g) => (
-                  <MenuItem key={g} value={g}>
-                    {g}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <FormControl fullWidth>
-              <InputLabel>Sort by</InputLabel>
-              <Select
-                value={sortBy}
-                onChange={handleSortByChange}
-                label="Sort by"
-              >
-                <MenuItem value="TITLE">Title</MenuItem>
-                <MenuItem value="RATING">Rating</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={1}>
-            <FormControl fullWidth>
-              <InputLabel>Order</InputLabel>
-              <Select
-                value={ascending ? "asc" : "desc"}
-                onChange={handleAscendingChange}
-                label="Order"
-              >
-                <MenuItem value="asc">Asc</MenuItem>
-                <MenuItem value="desc">Desc</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={2}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={onlyAvailable}
-                  onChange={handleOnlyAvailableChange}
-                />
-              }
-              label="Only available"
+
+            <GenreSelector
+              genres={genres}
+              value={genreFilter}
+              onChange={(newGenre) => {
+                setGenreFilter(newGenre);
+                setPage(0);
+              }}
+              width={150}
             />
-          </Grid>
-        </Grid>
+          </Box>
+
+          {/* Dreta: SortToggle + OnlyAvailable */}
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <SortToggle
+              sortBy={sortBy}
+              ascending={ascending}
+              onSortByChange={(newSort) => setSortBy(newSort)}
+              onToggleOrder={() => setAscending(!ascending)}
+              width={150}
+            />
+
+            <HideUnavailableCheckbox
+              checked={!onlyAvailable}
+              onChange={(newValue) => {
+                setOnlyAvailable(!newValue);
+                setPage(0);
+              }}
+            />
+          </Box>
+        </Box>
 
         {loading && <CircularProgress />}
         {error && <Typography color="error">{error}</Typography>}
 
         {!loading && !error && (
-          <Grid container spacing={6} justifyContent="center">
+          <Grid
+            container
+            spacing={6}
+            justifyContent="center"
+            sx={{ mt: 6, columnGap: 16 }}
+          >
             {isAdmin && (
               <Grid item xs={12} sm={6} key={"add-movie-card"}>
                 <AddMovieCard onClick={() => setOpenAddModal(true)} />
@@ -229,17 +190,19 @@ export default function Movies() {
       >
         <IconButton
           disabled={page === 0}
-          color="inherit"
           onClick={() => handlePageChange(page - 1)}
           size="large"
+          sx={{ color: "#fff" }} // text i icon blanc
         >
           <ArrowBackIosNewIcon fontSize="large" />
         </IconButton>
-        <Typography sx={{ mt: 1 }}>PAGE {page + 1}</Typography>
+
+        <Typography sx={{ mt: 1, color: "#fff" }}>PAGE {page + 1}</Typography>
+
         <IconButton
-          color="inherit"
           onClick={() => handlePageChange(page + 1)}
           size="large"
+          sx={{ color: "#fff" }} // text i icon blanc
         >
           <ArrowForwardIosIcon fontSize="large" />
         </IconButton>

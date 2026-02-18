@@ -20,25 +20,18 @@ const theme = createTheme({
   palette: {
     primary: {
       main: "#222",
-      contrastText: "#f5f5f5",
-    },
-    background: {
-      default: "#f0f0f0",
-      paper: "#fff",
-    },
-    text: {
-      primary: "#f5f5f5",
-      secondary: "#333",
+      contrastText: "#fff",
     },
   },
   typography: {
     body1: {
-      fontSize: "1.3rem",
-      color: "#f5f5f5",
+      fontSize: "1.4rem",
     },
     body2: {
+      fontSize: "1.2rem",
+    },
+    body3: {
       fontSize: "1.0rem",
-      color: "#f5f5f5",
     },
   },
 });
@@ -49,7 +42,7 @@ function AppRoutes() {
   if (loading) return <div>Loading...</div>;
 
   const defaultStyle = {
-    backgroundImage: "url('src/assets/background-theater.png')",
+    backgroundImage: "url('src/assets/background-theater-red.png')",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center center",

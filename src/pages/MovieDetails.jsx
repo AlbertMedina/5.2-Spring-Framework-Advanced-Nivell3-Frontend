@@ -15,6 +15,7 @@ import { getMovie, removeMovie } from "../services/api";
 import AuthContext from "../services/auth.context";
 
 import ConfirmDialog from "../components/shared/ConfirmDialog";
+import UpdateMovieModal from "../components/admin/UpdateMovieModal";
 
 import defaultPoster from "../assets/background-movie.webp";
 
@@ -27,6 +28,7 @@ export default function MovieDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   useEffect(() => {
     if (!token) return;
@@ -54,7 +56,7 @@ export default function MovieDetails() {
   const isAdmin = role === "ADMIN";
 
   const handleEdit = () => {
-    navigate(`/admin/movies/edit/${movieId}`);
+    setUpdateModalOpen(true);
   };
 
   const handleDeleteClick = () => {
@@ -73,6 +75,11 @@ export default function MovieDetails() {
 
   const handleCancelDelete = () => {
     setConfirmOpen(false);
+  };
+
+  const handleMovieUpdated = (updatedMovie) => {
+    setMovie(updatedMovie);
+    setUpdateModalOpen(false);
   };
 
   if (loading) return <CircularProgress />;
@@ -176,6 +183,14 @@ export default function MovieDetails() {
           text="Are you sure you want to delete this movie?"
           onConfirm={handleConfirmDelete}
           onCancel={handleCancelDelete}
+        />
+
+        <UpdateMovieModal
+          open={updateModalOpen}
+          onClose={() => setUpdateModalOpen(false)}
+          token={token}
+          movie={movie}
+          onMovieUpdated={handleMovieUpdated}
         />
       </Box>
     </Box>

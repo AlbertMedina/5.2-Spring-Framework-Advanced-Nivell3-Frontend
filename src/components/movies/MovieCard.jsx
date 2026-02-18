@@ -7,7 +7,7 @@ export default function MovieCard({ movie, onClick }) {
       onClick={onClick}
       sx={{
         width: 250,
-        height: 380,
+        aspectRatio: "2 / 3",
         textAlign: "left",
         borderRadius: 2,
         overflow: "hidden",

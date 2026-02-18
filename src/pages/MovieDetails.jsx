@@ -1,15 +1,22 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
 import {
   Box,
   Typography,
-  Button,
+  IconButton,
   CircularProgress,
   Grid,
-  Paper,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import { getMovie, removeMovie } from "../services/api";
 import AuthContext from "../services/auth.context";
+
+import ConfirmDialog from "../components/shared/ConfirmDialog";
+
+import defaultPoster from "../assets/background-movie.webp";
 
 export default function MovieDetails() {
   const { movieId } = useParams();
@@ -19,6 +26,7 @@ export default function MovieDetails() {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
     if (!token) return;
@@ -38,7 +46,6 @@ export default function MovieDetails() {
     };
 
     fetchMovie();
-
     return () => {
       cancelled = true;
     };
@@ -46,8 +53,16 @@ export default function MovieDetails() {
 
   const isAdmin = role === "ADMIN";
 
-  const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this movie?")) return;
+  const handleEdit = () => {
+    navigate(`/admin/movies/edit/${movieId}`);
+  };
+
+  const handleDeleteClick = () => {
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setConfirmOpen(false);
     try {
       await removeMovie(token, movieId);
       navigate("/movies");
@@ -56,8 +71,8 @@ export default function MovieDetails() {
     }
   };
 
-  const handleEdit = () => {
-    navigate(`/admin/movies/edit/${movieId}`);
+  const handleCancelDelete = () => {
+    setConfirmOpen(false);
   };
 
   if (loading) return <CircularProgress />;
@@ -65,60 +80,104 @@ export default function MovieDetails() {
   if (!movie) return null;
 
   return (
-    <Paper sx={{ maxWidth: 900, mx: "auto", mt: 10, p: 3 }}>
-      <Grid container spacing={3} alignItems="flex-start">
-        {/* Poster */}
-        <Grid item xs={12} md={4}>
+    <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          p: 4,
+          borderRadius: 3,
+          boxShadow: 4,
+          maxWidth: 1200,
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        {isAdmin && (
           <Box
-            component="img"
-            src={movie.posterUrl}
-            alt={movie.title}
             sx={{
-              width: "100%",
-              maxHeight: 400, // limita l'altura
-              objectFit: "cover", // manté el ratio
-              borderRadius: 2,
-              boxShadow: 3,
+              position: "absolute",
+              top: 16,
+              right: 16,
+              display: "flex",
+              gap: 1,
             }}
-          />
-        </Grid>
+          >
+            <IconButton color="inherit" onClick={handleEdit} size="large">
+              <EditIcon fontSize="large" />
+            </IconButton>
+            <IconButton
+              color="inherit"
+              onClick={handleDeleteClick}
+              size="large"
+            >
+              <DeleteIcon fontSize="large" />
+            </IconButton>
+          </Box>
+        )}
 
-        {/* Informació */}
-        <Grid
-          item
-          xs={12}
-          md={8}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Typography variant="h4" gutterBottom>
-            {movie.title}
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 1 }}>
-            {movie.genre} | {movie.year} | {movie.duration} min
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            Director: {movie.director}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 3 }}>
-            {movie.description}
-          </Typography>
-
-          {isAdmin && (
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <Button variant="outlined" color="primary" onClick={handleEdit}>
-                Edit
-              </Button>
-              <Button variant="outlined" color="error" onClick={handleDelete}>
-                Delete
-              </Button>
+        <Grid container spacing={4} alignItems="flex-start">
+          <Grid item xs={4} sm={3} md={3}>
+            <Box
+              sx={{
+                width: "100%",
+                aspectRatio: "2 / 3",
+                overflow: "hidden",
+                borderRadius: 2,
+                boxShadow: 3,
+                maxWidth: 300,
+              }}
+            >
+              <Box
+                component="img"
+                src={movie.posterUrl || defaultPoster}
+                alt={movie.title}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  display: "block",
+                }}
+              />
             </Box>
-          )}
+          </Grid>
+
+          <Grid sx={{ flex: 1, minWidth: 300 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Typography variant="h4" gutterBottom>
+                {movie.title}
+              </Typography>
+
+              <Typography>
+                <strong>Genre:</strong> {movie.genre}
+              </Typography>
+              <Typography>
+                <strong>Year:</strong> {movie.year}
+              </Typography>
+              <Typography>
+                <strong>Duration:</strong> {movie.duration} min
+              </Typography>
+              <Typography>
+                <strong>Director:</strong> {movie.director}
+              </Typography>
+
+              <Typography sx={{ mt: 1 }}>
+                <strong>Synopsis:</strong>
+              </Typography>
+              <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
+                "{movie.synopsis}"
+              </Typography>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Paper>
+
+        <ConfirmDialog
+          open={confirmOpen}
+          text="Are you sure you want to delete this movie?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      </Box>
+    </Box>
   );
 }

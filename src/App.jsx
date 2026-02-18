@@ -1,20 +1,24 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense, useContext } from "react";
 
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+
 import { AuthProvider } from "./services/auth.context";
 import AuthContext from "./services/auth.context";
 
-import Nav from "./components/core/Nav";
-import Footer from "./components/core/Footer";
+const AuthApp = lazy(() => import("./app/AuthApp"));
+const AdminApp = lazy(() => import("./app/AdminApp"));
+const UserApp = lazy(() => import("./app/UserApp"));
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import Nav from "./components/core/Nav";
+import Footer from "./components/core/Footer";
 
-const AdminApp = lazy(() => import("./app/AdminApp"));
-const UserApp = lazy(() => import("./app/UserApp"));
+import DefaultBackgroundImage from "./assets/background-theater-red.png";
+import AuthBackgroundImage from "./assets/background-videostore.png";
 
 const theme = createTheme({
   palette: {
@@ -42,39 +46,29 @@ function AppRoutes() {
   if (loading) return <div>Loading...</div>;
 
   const defaultStyle = {
-    backgroundImage: "url('src/assets/background-theater-red.png')",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center center",
-    minHeight: "100vh",
-    overflow: "hidden",
-  };
-
-  const authStyle = {
-    backgroundImage: "url('src/assets/background-videostore.png')",
+    backgroundImage: `url(${DefaultBackgroundImage})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center top",
     minHeight: "100vh",
-    overflow: "hidden",
+    overflow: "auto",
   };
 
-  if (!role) {
-    return (
-      <div style={authStyle}>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </div>
-    );
-  }
+  const authStyle = {
+    backgroundImage: `url(${AuthBackgroundImage})`,
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center top",
+    minHeight: "100vh",
+    overflow: "auto",
+  };
+
+  const style = role ? defaultStyle : authStyle;
 
   return (
-    <div style={defaultStyle}>
+    <div style={style}>
       <Suspense fallback={<div>Loading...</div>}>
-        {role === "ADMIN" ? <AdminApp /> : <UserApp />}
+        {role ? role === "ADMIN" ? <AdminApp /> : <UserApp /> : <AuthApp />}
       </Suspense>
     </div>
   );

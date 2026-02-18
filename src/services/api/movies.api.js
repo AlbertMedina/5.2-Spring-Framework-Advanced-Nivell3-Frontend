@@ -6,6 +6,78 @@ function authHeaders(token) {
   };
 }
 
+export async function addMovie(token, movieData, posterFile) {
+  const formData = new FormData();
+  formData.append(
+    "movie",
+    new Blob([JSON.stringify(movieData)], { type: "application/json" })
+  );
+
+  if (posterFile) {
+    formData.append("poster", posterFile);
+  }
+
+  const res = await fetch(`${API_URL}/movies`, {
+    method: "POST",
+    headers: authHeaders(token),
+    body: formData,
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Cannot add movie");
+  }
+
+  return await res.json();
+}
+
+export async function updateMovie(token, movieId, updateData) {
+  const res = await fetch(`${API_URL}/movies/${movieId}`, {
+    method: "PUT",
+    headers: {
+      ...authHeaders(token),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updateData),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Cannot update movie");
+  }
+
+  return await res.json();
+}
+
+export async function removeMovie(token, movieId) {
+  const res = await fetch(`${API_URL}/movies/${movieId}`, {
+    method: "DELETE",
+    headers: authHeaders(token),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Cannot delete movie");
+  }
+
+  return true;
+}
+
 export async function getAllMovies({
   token,
   page,
@@ -41,8 +113,31 @@ export async function getAllMovies({
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || "Cannot get movies");
+  }
+
+  return await res.json();
+}
+
+export async function getMovie(token, movieId) {
+  const res = await fetch(`${API_URL}/movies/${movieId}`, {
+    headers: authHeaders(token),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Cannot get movie");
   }
 
   return await res.json();
@@ -54,6 +149,11 @@ export async function getGenres(token) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || "Cannot get genres");
   }
@@ -61,72 +161,26 @@ export async function getGenres(token) {
   return await res.json();
 }
 
-export async function getMovie(movieId, token) {
-  const res = await fetch(`${API_URL}/movies/${movieId}`, {
+export async function getMovieRating(token, movieId) {
+  const res = await fetch(`${API_URL}/movies/${movieId}/rating`, {
     headers: authHeaders(token),
   });
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Cannot get movie");
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json();
+    throw new Error(err.message || "Cannot get movie rating");
   }
 
   return await res.json();
 }
 
-export async function addMovie(token, movieData, posterFile) {
-  const formData = new FormData();
-  formData.append(
-    "movie",
-    new Blob([JSON.stringify(movieData)], { type: "application/json" })
-  );
-
-  if (posterFile) {
-    formData.append("poster", posterFile);
-  }
-
-  const res = await fetch(`${API_URL}/movies`, {
-    method: "POST",
-    headers: authHeaders(token),
-    body: formData,
-  });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Cannot add movie");
-  }
-
-  return await res.json();
-}
-
-export async function updateMovie(token, movieId, updateData) {
-  const res = await fetch(`${API_URL}/movies/${movieId}`, {
-    method: "PUT",
-    headers: {
-      ...authHeaders(token),
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(updateData),
-  });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Cannot update movie");
-  }
-
-  return await res.json();
-}
-
-export async function removeMovie(token, movieId) {
-  const res = await fetch(`${API_URL}/movies/${movieId}`, {
-    method: "DELETE",
-    headers: authHeaders(token),
-  });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Cannot delete movie");
-  }
-
-  return true;
+function forceLogOut() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.href = "/login";
 }

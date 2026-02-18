@@ -99,7 +99,7 @@ export default function Movies() {
       sx={{
         maxWidth: 1800,
         mx: "auto",
-        mt: 10,
+        mt: 12,
         textAlign: "center",
         display: "flex",
         flexDirection: "column",
@@ -114,8 +114,6 @@ export default function Movies() {
             justifyContent: "space-between",
             flexWrap: "wrap",
             gap: 2,
-            mt: 4,
-            mb: 4,
           }}
         >
           <Box sx={{ display: "flex", gap: 2 }}>

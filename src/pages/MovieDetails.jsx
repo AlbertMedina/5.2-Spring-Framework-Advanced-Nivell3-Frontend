@@ -11,11 +11,12 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { getMovie, removeMovie } from "../services/api";
+import { getMovie, getMovieRating, removeMovie } from "../services/api";
 import AuthContext from "../services/auth.context";
 
 import ConfirmDialog from "../components/shared/ConfirmDialog";
 import UpdateMovieModal from "../components/admin/UpdateMovieModal";
+import StarRating from "../components/movies/StarRating";
 
 import defaultPoster from "../assets/background-movie.webp";
 
@@ -25,6 +26,7 @@ export default function MovieDetails() {
   const navigate = useNavigate();
 
   const [movie, setMovie] = useState(null);
+  const [rating, setRating] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -38,7 +40,7 @@ export default function MovieDetails() {
       try {
         setLoading(true);
         setError("");
-        const data = await getMovie(movieId, token);
+        const data = await getMovie(token, movieId);
         if (!cancelled) setMovie(data);
       } catch (err) {
         if (!cancelled) setError(err.message || "Error fetching movie");
@@ -53,15 +55,31 @@ export default function MovieDetails() {
     };
   }, [token, movieId]);
 
+  // Nou useEffect per obtenir el rating
+  useEffect(() => {
+    if (!token || !movieId) return;
+    let cancelled = false;
+
+    const fetchRating = async () => {
+      try {
+        const data = await getMovieRating(token, movieId);
+        if (!cancelled) setRating(data);
+      } catch (err) {
+        console.error("Error fetching rating:", err);
+      }
+    };
+
+    fetchRating();
+    return () => {
+      cancelled = true;
+    };
+  }, [token, movieId]);
+
   const isAdmin = role === "ADMIN";
 
-  const handleEdit = () => {
-    setUpdateModalOpen(true);
-  };
-
-  const handleDeleteClick = () => {
-    setConfirmOpen(true);
-  };
+  const handleEdit = () => setUpdateModalOpen(true);
+  const handleDeleteClick = () => setConfirmOpen(true);
+  const handleCancelDelete = () => setConfirmOpen(false);
 
   const handleConfirmDelete = async () => {
     setConfirmOpen(false);
@@ -71,10 +89,6 @@ export default function MovieDetails() {
     } catch (err) {
       alert(err.message || "Error deleting movie");
     }
-  };
-
-  const handleCancelDelete = () => {
-    setConfirmOpen(false);
   };
 
   const handleMovieUpdated = (updatedMovie) => {
@@ -87,7 +101,7 @@ export default function MovieDetails() {
   if (!movie) return null;
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+    <Box sx={{ display: "flex", justifyContent: "center", mt: 12 }}>
       <Box
         sx={{
           bgcolor: "background.paper",
@@ -174,6 +188,25 @@ export default function MovieDetails() {
               <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
                 "{movie.synopsis}"
               </Typography>
+
+              {rating && (
+                <Box sx={{ mt: 2 }}>
+                  <Box>
+                    <strong>Rating:</strong>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mt: 0.5,
+                    }}
+                  >
+                    <StarRating rating={rating.average} />
+                    <Box>({rating.count} reviews)</Box>
+                  </Box>
+                </Box>
+              )}
             </Box>
           </Grid>
         </Grid>

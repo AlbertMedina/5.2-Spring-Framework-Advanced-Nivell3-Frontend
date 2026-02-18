@@ -11,7 +11,7 @@ import {
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-import { getAllMovies, getGenres, removeMovie } from "../services/api";
+import { getAllMovies, getGenres } from "../services/api";
 import AuthContext from "../services/auth.context";
 
 import MovieCard from "../components/movies/MovieCard";
@@ -29,8 +29,12 @@ export default function Movies() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [page, setPage] = useState(0);
   const pageSize = 9;
+
+  const [totalPages, setTotalPages] = useState(0);
+  const [hasNext, setHasNext] = useState(false);
 
   const [titleFilter, setTitleFilter] = useState("");
   const [genreFilter, setGenreFilter] = useState("");
@@ -58,9 +62,11 @@ export default function Movies() {
 
   const fetchMovies = async () => {
     if (!token) return;
+
     try {
       setLoading(true);
       setError("");
+
       const data = await getAllMovies({
         token,
         page,
@@ -71,7 +77,10 @@ export default function Movies() {
         sortBy,
         ascending,
       });
-      setMovies(data);
+
+      setMovies(data.content);
+      setTotalPages(data.totalPages);
+      setHasNext(data.hasNext);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -109,7 +118,6 @@ export default function Movies() {
             mb: 4,
           }}
         >
-          {/* Esquerra: Search + Genre */}
           <Box sx={{ display: "flex", gap: 2 }}>
             <SearchBox
               value={titleFilter}
@@ -132,7 +140,6 @@ export default function Movies() {
             />
           </Box>
 
-          {/* Dreta: SortToggle + OnlyAvailable */}
           <Box sx={{ display: "flex", gap: 2 }}>
             <SortToggle
               sortBy={sortBy}
@@ -163,10 +170,11 @@ export default function Movies() {
             sx={{ mt: 6, columnGap: 16 }}
           >
             {isAdmin && (
-              <Grid item xs={12} sm={6} key={"add-movie-card"}>
+              <Grid item xs={12} sm={6}>
                 <AddMovieCard onClick={() => setOpenAddModal(true)} />
               </Grid>
             )}
+
             {movies.map((movie) => (
               <Grid item xs={12} sm={6} key={movie.id}>
                 <MovieCard
@@ -192,17 +200,20 @@ export default function Movies() {
           disabled={page === 0}
           onClick={() => handlePageChange(page - 1)}
           size="large"
-          sx={{ color: "#fff" }} // text i icon blanc
+          sx={{ color: "#fff" }}
         >
           <ArrowBackIosNewIcon fontSize="large" />
         </IconButton>
 
-        <Typography sx={{ mt: 1, color: "#fff" }}>PAGE {page + 1}</Typography>
+        <Typography sx={{ mt: 1, color: "#fff" }}>
+          PAGE {page + 1} OF {totalPages}
+        </Typography>
 
         <IconButton
+          disabled={!hasNext}
           onClick={() => handlePageChange(page + 1)}
           size="large"
-          sx={{ color: "#fff" }} // text i icon blanc
+          sx={{ color: "#fff" }}
         >
           <ArrowForwardIosIcon fontSize="large" />
         </IconButton>
@@ -214,6 +225,7 @@ export default function Movies() {
         token={token}
         genres={genres}
         onMovieAdded={() => {
+          setPage(0);
           fetchMovies();
           fetchGenres();
         }}

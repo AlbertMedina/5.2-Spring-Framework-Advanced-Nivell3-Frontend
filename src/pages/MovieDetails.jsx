@@ -7,8 +7,9 @@ import {
   removeMovie,
   rentMovie,
   returnMovie,
-  getMovieReviews,
   userHasRentedMovie,
+  getMovieReviews,
+  removeReview,
 } from "../services/api";
 import AuthContext from "../services/auth.context";
 
@@ -21,7 +22,7 @@ import ErrorDialog from "../components/shared/ErrorDialog";
 
 export default function MovieDetails() {
   const { movieId } = useParams();
-  const { token, role } = useContext(AuthContext);
+  const { token, role, userId, loading: authLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [movie, setMovie] = useState(null);
@@ -30,42 +31,45 @@ export default function MovieDetails() {
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [confirmDeleteMovieOpen, setConfirmDeleteMovieOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [rentConfirmOpen, setRentConfirmOpen] = useState(false);
+  const [confirmDeleteReviewOpen, setConfirmDeleteReviewOpen] = useState(false);
 
   const [hasRented, setHasRented] = useState(false);
 
   const isAdmin = role === "ADMIN";
   const isUser = role === "USER";
 
+  const fetchMovieDetails = async () => {
+    try {
+      setLoading(true);
+      const data = await getMovie(token, movieId);
+      setMovie(data);
+
+      if (isUser) {
+        const rentedResp = await userHasRentedMovie(token, movieId);
+        setHasRented(rentedResp.rented);
+      }
+    } catch (err) {
+      setErrorMessage(err.message || "Error fetching movie");
+      setErrorDialogOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!token) return;
+
     let cancelled = false;
 
-    const fetchMovie = async () => {
-      try {
-        setLoading(true);
-        const data = await getMovie(token, movieId);
-        if (!cancelled) setMovie(data);
+    fetchMovieDetails();
 
-        if (isUser) {
-          const rentedResp = await userHasRentedMovie(token, movieId);
-          if (!cancelled) setHasRented(rentedResp.rented);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setErrorMessage(err.message || "Error fetching movie");
-          setErrorDialogOpen(true);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+    return () => {
+      cancelled = true;
     };
-
-    fetchMovie();
-    return () => (cancelled = true);
   }, [token, movieId, isUser]);
 
   const fetchReviews = async () => {
@@ -73,7 +77,8 @@ export default function MovieDetails() {
       const data = await getMovieReviews(token, movieId);
       setReviews(data);
     } catch (err) {
-      console.error(err);
+      setErrorMessage(err.message || "Error fetching reviews");
+      setErrorDialogOpen(true);
     }
   };
 
@@ -81,8 +86,8 @@ export default function MovieDetails() {
     if (token && movieId) fetchReviews();
   }, [token, movieId]);
 
-  const handleConfirmDelete = async () => {
-    setConfirmDeleteOpen(false);
+  const handleConfirmDeleteMovie = async () => {
+    setConfirmDeleteMovieOpen(false);
     try {
       await removeMovie(token, movieId);
       navigate("/movies");
@@ -117,7 +122,24 @@ export default function MovieDetails() {
     }
   };
 
-  if (loading) return <CircularProgress />;
+  const handleConfirmDeleteReview = async () => {
+    setConfirmDeleteReviewOpen(false);
+    try {
+      await removeReview(token, movie.id);
+      fetchReviews();
+      fetchMovieDetails();
+    } catch (err) {
+      setErrorMessage(err.message || "Error deleting movie");
+      setErrorDialogOpen(true);
+    }
+  };
+
+  const handleReviewAdded = async () => {
+    await fetchReviews(); // actualitza la llista de reviews
+    await fetchMovieDetails(); // actualitza les dades de la peli (rating avg, etc.)
+  };
+
+  if (loading || authLoading) return <CircularProgress />;
   if (!movie) return null;
 
   return (
@@ -137,16 +159,16 @@ export default function MovieDetails() {
         isUser={isUser}
         hasRented={hasRented}
         onEdit={() => setUpdateModalOpen(true)}
-        onDelete={() => setConfirmDeleteOpen(true)}
+        onDelete={() => setConfirmDeleteMovieOpen(true)}
         onRentReturn={handleRentReturnClick}
         onReview={() => setReviewModalOpen(true)}
       />
 
       <ConfirmDialog
-        open={confirmDeleteOpen}
+        open={confirmDeleteMovieOpen}
         text="Are you sure you want to delete this movie?"
-        onConfirm={handleConfirmDelete}
-        onCancel={() => setConfirmDeleteOpen(false)}
+        onConfirm={handleConfirmDeleteMovie}
+        onCancel={() => setConfirmDeleteMovieOpen(false)}
       />
 
       <ConfirmDialog
@@ -158,6 +180,13 @@ export default function MovieDetails() {
         }
         onConfirm={handleConfirmRentReturn}
         onCancel={() => setRentConfirmOpen(false)}
+      />
+
+      <ConfirmDialog
+        open={confirmDeleteReviewOpen}
+        text="Are you sure you want to delete this review?"
+        onConfirm={handleConfirmDeleteReview}
+        onCancel={() => setConfirmDeleteReviewOpen(false)}
       />
 
       <UpdateMovieModal
@@ -174,7 +203,7 @@ export default function MovieDetails() {
           onClose={() => setReviewModalOpen(false)}
           token={token}
           movieId={movieId}
-          onReviewAdded={fetchReviews}
+          onReviewAdded={handleReviewAdded}
         />
       )}
 
@@ -194,9 +223,25 @@ export default function MovieDetails() {
             mt: 4,
           }}
         >
-          {reviews.map((r) => (
-            <ReviewCard key={r.id} review={r} />
-          ))}
+          {reviews.map((r) => {
+            const canDelete = isAdmin || r.userId === Number(userId);
+            console.log(
+              reviews.map((r) => r.userId),
+              userId
+            );
+            console.log(canDelete);
+
+            return (
+              <ReviewCard
+                key={r.id}
+                review={r}
+                showDeleteButton={canDelete}
+                onDelete={(reviewId) => {
+                  setConfirmDeleteReviewOpen(true);
+                }}
+              />
+            );
+          })}
         </Box>
       )}
 

@@ -19,7 +19,7 @@ export default function Login() {
     try {
       const data = await loginUser(loginIdentifier, password);
 
-      login(data.role, data.token);
+      login(data.role, data.userId, data.token);
 
       navigate("/");
     } catch (err) {

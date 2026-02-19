@@ -1,24 +1,24 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Box, CircularProgress } from "@mui/material";
 
 import {
-  Box,
-  Typography,
-  IconButton,
-  CircularProgress,
-  Grid,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-
-import { getMovie, getMovieRating, removeMovie } from "../services/api";
+  getMovie,
+  removeMovie,
+  getMovieRating,
+  rentMovie,
+  returnMovie,
+  getMovieReviews,
+  userHasRentedMovie,
+} from "../services/api";
 import AuthContext from "../services/auth.context";
 
 import ConfirmDialog from "../components/shared/ConfirmDialog";
 import UpdateMovieModal from "../components/admin/UpdateMovieModal";
-import StarRating from "../components/movies/StarRating";
-
-import defaultPoster from "../assets/background-movie.webp";
+import AddReviewModal from "../components/admin/AddReviewModal";
+import ReviewCard from "../components/movies/ReviewCard";
+import MovieDetailsCard from "../components/movies/MovieDetailsCard";
+import ErrorDialog from "../components/shared/ErrorDialog";
 
 export default function MovieDetails() {
   const { movieId } = useParams();
@@ -27,10 +27,20 @@ export default function MovieDetails() {
 
   const [movie, setMovie] = useState(null);
   const [rating, setRating] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [rentConfirmOpen, setRentConfirmOpen] = useState(false);
+
+  const [hasRented, setHasRented] = useState(false);
+
+  const isAdmin = role === "ADMIN";
+  const isUser = role === "USER";
 
   useEffect(() => {
     if (!token) return;
@@ -39,23 +49,27 @@ export default function MovieDetails() {
     const fetchMovie = async () => {
       try {
         setLoading(true);
-        setError("");
         const data = await getMovie(token, movieId);
         if (!cancelled) setMovie(data);
+
+        if (isUser) {
+          const rentedResp = await userHasRentedMovie(token, movieId);
+          if (!cancelled) setHasRented(rentedResp.rented);
+        }
       } catch (err) {
-        if (!cancelled) setError(err.message || "Error fetching movie");
+        if (!cancelled) {
+          setErrorMessage(err.message || "Error fetching movie");
+          setErrorDialogOpen(true);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
     };
 
     fetchMovie();
-    return () => {
-      cancelled = true;
-    };
-  }, [token, movieId]);
+    return () => (cancelled = true);
+  }, [token, movieId, isUser]);
 
-  // Nou useEffect per obtenir el rating
   useEffect(() => {
     if (!token || !movieId) return;
     let cancelled = false;
@@ -70,24 +84,30 @@ export default function MovieDetails() {
     };
 
     fetchRating();
-    return () => {
-      cancelled = true;
-    };
+    return () => (cancelled = true);
   }, [token, movieId]);
 
-  const isAdmin = role === "ADMIN";
+  const fetchReviews = async () => {
+    try {
+      const data = await getMovieReviews(token, movieId);
+      setReviews(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  const handleEdit = () => setUpdateModalOpen(true);
-  const handleDeleteClick = () => setConfirmOpen(true);
-  const handleCancelDelete = () => setConfirmOpen(false);
+  useEffect(() => {
+    if (token && movieId) fetchReviews();
+  }, [token, movieId]);
 
   const handleConfirmDelete = async () => {
-    setConfirmOpen(false);
+    setConfirmDeleteOpen(false);
     try {
       await removeMovie(token, movieId);
       navigate("/movies");
     } catch (err) {
-      alert(err.message || "Error deleting movie");
+      setErrorMessage(err.message || "Error deleting movie");
+      setErrorDialogOpen(true);
     }
   };
 
@@ -96,136 +116,115 @@ export default function MovieDetails() {
     setUpdateModalOpen(false);
   };
 
+  const handleRentReturnClick = () => {
+    setRentConfirmOpen(true);
+  };
+
+  const handleConfirmRentReturn = async () => {
+    setRentConfirmOpen(false);
+    try {
+      if (hasRented) {
+        await returnMovie(token, movieId);
+        setHasRented(false);
+      } else {
+        await rentMovie(token, movieId);
+        setHasRented(true);
+      }
+    } catch (err) {
+      setErrorMessage(err.message || "Error processing rental");
+      setErrorDialogOpen(true);
+    }
+  };
+
   if (loading) return <CircularProgress />;
-  if (error) return <Typography color="error">{error}</Typography>;
   if (!movie) return null;
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", mt: 12 }}>
-      <Box
-        sx={{
-          bgcolor: "background.paper",
-          p: 4,
-          borderRadius: 3,
-          boxShadow: 4,
-          maxWidth: 1200,
-          width: "100%",
-          position: "relative",
-        }}
-      >
-        {isAdmin && (
-          <Box
-            sx={{
-              position: "absolute",
-              top: 16,
-              right: 16,
-              display: "flex",
-              gap: 1,
-            }}
-          >
-            <IconButton color="inherit" onClick={handleEdit} size="large">
-              <EditIcon fontSize="large" />
-            </IconButton>
-            <IconButton
-              color="inherit"
-              onClick={handleDeleteClick}
-              size="large"
-            >
-              <DeleteIcon fontSize="large" />
-            </IconButton>
-          </Box>
-        )}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        mt: 12,
+        width: "100%",
+      }}
+    >
+      <MovieDetailsCard
+        movie={movie}
+        rating={rating}
+        isAdmin={isAdmin}
+        isUser={isUser}
+        hasRented={hasRented}
+        onEdit={() => setUpdateModalOpen(true)}
+        onDelete={() => setConfirmDeleteOpen(true)}
+        onRentReturn={handleRentReturnClick}
+        onReview={() => setReviewModalOpen(true)}
+      />
 
-        <Grid container spacing={4} alignItems="flex-start">
-          <Grid item xs={4} sm={3} md={3}>
-            <Box
-              sx={{
-                width: "100%",
-                aspectRatio: "2 / 3",
-                overflow: "hidden",
-                borderRadius: 2,
-                boxShadow: 3,
-                maxWidth: 300,
-              }}
-            >
-              <Box
-                component="img"
-                src={movie.posterUrl || defaultPoster}
-                alt={movie.title}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center",
-                  display: "block",
-                }}
-              />
-            </Box>
-          </Grid>
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        text="Are you sure you want to delete this movie?"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmDeleteOpen(false)}
+      />
 
-          <Grid sx={{ flex: 1, minWidth: 300 }}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              <Typography variant="h4" gutterBottom>
-                {movie.title}
-              </Typography>
+      <ConfirmDialog
+        open={rentConfirmOpen}
+        text={
+          hasRented
+            ? "Are you sure you want to return this movie?"
+            : "Are you sure you want to rent this movie?"
+        }
+        onConfirm={handleConfirmRentReturn}
+        onCancel={() => setRentConfirmOpen(false)}
+      />
 
-              <Typography>
-                <strong>Genre:</strong> {movie.genre}
-              </Typography>
-              <Typography>
-                <strong>Year:</strong> {movie.year}
-              </Typography>
-              <Typography>
-                <strong>Duration:</strong> {movie.duration} min
-              </Typography>
-              <Typography>
-                <strong>Director:</strong> {movie.director}
-              </Typography>
+      <UpdateMovieModal
+        open={updateModalOpen}
+        onClose={() => setUpdateModalOpen(false)}
+        token={token}
+        movie={movie}
+        onMovieUpdated={handleMovieUpdated}
+      />
 
-              <Typography sx={{ mt: 1 }}>
-                <strong>Synopsis:</strong>
-              </Typography>
-              <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
-                "{movie.synopsis}"
-              </Typography>
-
-              {rating && (
-                <Box sx={{ mt: 2 }}>
-                  <Box>
-                    <strong>Rating:</strong>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                      mt: 0.5,
-                    }}
-                  >
-                    <StarRating rating={rating.average} />
-                    <Box>({rating.count} reviews)</Box>
-                  </Box>
-                </Box>
-              )}
-            </Box>
-          </Grid>
-        </Grid>
-
-        <ConfirmDialog
-          open={confirmOpen}
-          text="Are you sure you want to delete this movie?"
-          onConfirm={handleConfirmDelete}
-          onCancel={handleCancelDelete}
-        />
-
-        <UpdateMovieModal
-          open={updateModalOpen}
-          onClose={() => setUpdateModalOpen(false)}
+      {hasRented && (
+        <AddReviewModal
+          open={reviewModalOpen}
+          onClose={() => setReviewModalOpen(false)}
           token={token}
-          movie={movie}
-          onMovieUpdated={handleMovieUpdated}
+          movieId={movieId}
+          onReviewAdded={fetchReviews}
         />
-      </Box>
+      )}
+
+      {reviews.length > 0 && (
+        <Box
+          sx={{
+            p: 4,
+            borderRadius: 3,
+            boxShadow: 4,
+            maxWidth: 1200,
+            width: "100%",
+            position: "relative",
+            mx: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            mt: 4,
+          }}
+        >
+          {reviews.map((r) => (
+            <ReviewCard key={r.id} review={r} />
+          ))}
+        </Box>
+      )}
+
+      <ErrorDialog
+        open={errorDialogOpen}
+        onClose={() => setErrorDialogOpen(false)}
+        message={errorMessage}
+      />
     </Box>
   );
 }

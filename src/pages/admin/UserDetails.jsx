@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import AuthContext from "../../services/auth.context";
-import { getUser, getRentalsByUser, removeUser } from "../../services/api";
+import { getUser, getUserRentals, removeUser } from "../../services/api";
 import ConfirmDialog from "../../components/shared/ConfirmDialog";
 
 export default function UserDetails() {
@@ -37,7 +37,7 @@ export default function UserDetails() {
         setError("");
 
         const userData = await getUser(token, userId);
-        const rentalsData = await getRentalsByUser(token, userId);
+        const rentalsData = await getUserRentals(token, userId);
 
         if (!cancelled) {
           setUser(userData);

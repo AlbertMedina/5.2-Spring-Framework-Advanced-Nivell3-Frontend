@@ -179,6 +179,42 @@ export async function getMovieRating(token, movieId) {
   return await res.json();
 }
 
+export async function getMovieReviews(token, movieId) {
+  const res = await fetch(`${API_URL}/movies/${movieId}/reviews`, {
+    headers: authHeaders(token),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json();
+    throw new Error(err.message || "Cannot get movie reviews");
+  }
+
+  return await res.json();
+}
+
+export async function getMovieRentals(token, movieId) {
+  const res = await fetch(`${API_URL}/movies/${movieId}/rentals`, {
+    headers: authHeaders(token),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json();
+    throw new Error(err.message || "Cannot get movie rentals");
+  }
+
+  return await res.json();
+}
+
 function forceLogOut() {
   localStorage.removeItem("token");
   localStorage.removeItem("role");

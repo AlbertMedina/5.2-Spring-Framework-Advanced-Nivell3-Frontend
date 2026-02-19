@@ -3,7 +3,11 @@ import StarIcon from "@mui/icons-material/Star";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 
-export default function StarRating({ rating, maxRating = 5, size = "medium" }) {
+export default function StarRatingDisplay({
+  rating,
+  maxRating = 5,
+  size = "medium",
+}) {
   const roundedRating = Math.round(rating * 2) / 2;
 
   const stars = [];

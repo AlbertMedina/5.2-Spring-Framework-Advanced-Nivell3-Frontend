@@ -15,6 +15,11 @@ export async function addFavourite(token, movieId) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json();
     throw new Error(err.message || "Cannot add favourite");
   }
@@ -29,6 +34,11 @@ export async function removeFavourite(token, movieId) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json();
     throw new Error(err.message || "Cannot remove favourite");
   }
@@ -36,15 +46,26 @@ export async function removeFavourite(token, movieId) {
   return true;
 }
 
-export async function getMyFavourites(token) {
-  const res = await fetch(`${API_URL}/me/favourites`, {
+export async function userHasFavouriteMovie(token, movieId) {
+  const res = await fetch(`${API_URL}/favourites/movies/${movieId}`, {
     headers: authHeaders(token),
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json();
-    throw new Error(err.message || "Cannot get favourites");
+    throw new Error(err.message || "Cannot check favourite");
   }
 
   return await res.json();
+}
+
+function forceLogOut() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.href = "/login";
 }

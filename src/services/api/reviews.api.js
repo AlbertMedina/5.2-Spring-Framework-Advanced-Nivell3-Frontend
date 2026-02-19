@@ -15,6 +15,11 @@ export async function addReview(token, { movieId, rating, comment }) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json();
     throw new Error(err.message || "Cannot add review");
   }
@@ -29,6 +34,11 @@ export async function removeReview(token, movieId) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json();
     throw new Error(err.message || "Cannot remove review");
   }
@@ -36,13 +46,8 @@ export async function removeReview(token, movieId) {
   return true;
 }
 
-export async function getReviewsByMovie(movieId) {
-  const res = await fetch(`${API_URL}/movies/${movieId}/reviews`);
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Cannot get reviews");
-  }
-
-  return await res.json();
+function forceLogOut() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.href = "/login";
 }

@@ -15,6 +15,11 @@ export async function rentMovie(token, movieId) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json();
     throw new Error(err.message || "Cannot rent movie");
   }
@@ -29,6 +34,11 @@ export async function returnMovie(token, movieId) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json();
     throw new Error(err.message || "Cannot return movie");
   }
@@ -36,41 +46,26 @@ export async function returnMovie(token, movieId) {
   return true;
 }
 
-export async function getMyRentals(token) {
-  const res = await fetch(`${API_URL}/me/rentals`, {
+export async function userHasRentedMovie(token, movieId) {
+  const res = await fetch(`${API_URL}/rentals/movies/${movieId}`, {
     headers: authHeaders(token),
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
     const err = await res.json();
-    throw new Error(err.message || "Cannot get my rentals");
+    throw new Error(err.message || "Cannot check rental");
   }
 
   return await res.json();
 }
 
-export async function getRentalsByUser(token, userId) {
-  const res = await fetch(`${API_URL}/users/${userId}/rentals`, {
-    headers: authHeaders(token),
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Cannot get user rentals");
-  }
-
-  return await res.json();
-}
-
-export async function getRentalsByMovie(token, movieId) {
-  const res = await fetch(`${API_URL}/movies/${movieId}/rentals`, {
-    headers: authHeaders(token),
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Cannot get movie rentals");
-  }
-
-  return await res.json();
+function forceLogOut() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.href = "/login";
 }

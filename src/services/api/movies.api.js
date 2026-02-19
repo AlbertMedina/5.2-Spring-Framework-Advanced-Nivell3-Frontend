@@ -161,24 +161,6 @@ export async function getGenres(token) {
   return await res.json();
 }
 
-export async function getMovieRating(token, movieId) {
-  const res = await fetch(`${API_URL}/movies/${movieId}/rating`, {
-    headers: authHeaders(token),
-  });
-
-  if (!res.ok) {
-    if (res.status === 401) {
-      forceLogOut();
-      return;
-    }
-
-    const err = await res.json();
-    throw new Error(err.message || "Cannot get movie rating");
-  }
-
-  return await res.json();
-}
-
 export async function getMovieReviews(token, movieId) {
   const res = await fetch(`${API_URL}/movies/${movieId}/reviews`, {
     headers: authHeaders(token),

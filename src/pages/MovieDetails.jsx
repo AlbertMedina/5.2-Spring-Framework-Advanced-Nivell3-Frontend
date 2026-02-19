@@ -5,7 +5,6 @@ import { Box, CircularProgress } from "@mui/material";
 import {
   getMovie,
   removeMovie,
-  getMovieRating,
   rentMovie,
   returnMovie,
   getMovieReviews,
@@ -26,7 +25,6 @@ export default function MovieDetails() {
   const navigate = useNavigate();
 
   const [movie, setMovie] = useState(null);
-  const [rating, setRating] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
@@ -69,23 +67,6 @@ export default function MovieDetails() {
     fetchMovie();
     return () => (cancelled = true);
   }, [token, movieId, isUser]);
-
-  useEffect(() => {
-    if (!token || !movieId) return;
-    let cancelled = false;
-
-    const fetchRating = async () => {
-      try {
-        const data = await getMovieRating(token, movieId);
-        if (!cancelled) setRating(data);
-      } catch (err) {
-        console.error("Error fetching rating:", err);
-      }
-    };
-
-    fetchRating();
-    return () => (cancelled = true);
-  }, [token, movieId]);
 
   const fetchReviews = async () => {
     try {
@@ -152,7 +133,6 @@ export default function MovieDetails() {
     >
       <MovieDetailsCard
         movie={movie}
-        rating={rating}
         isAdmin={isAdmin}
         isUser={isUser}
         hasRented={hasRented}

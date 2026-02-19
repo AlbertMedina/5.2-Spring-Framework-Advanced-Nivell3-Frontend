@@ -1,4 +1,7 @@
 import { Paper, Typography, Box, ButtonBase } from "@mui/material";
+
+import StarRatingDisplay from "../movies/StarRatingDisplay";
+
 import defaultPoster from "../../assets/background-movie.webp";
 
 export default function MovieCard({ movie, onClick }) {
@@ -72,6 +75,16 @@ export default function MovieCard({ movie, onClick }) {
               {movie.genre} | {movie.year} | {movie.duration} min
             </Typography>
             <Typography variant="body2">Director: {movie.director}</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                mt: 0.5,
+              }}
+            >
+              <StarRatingDisplay rating={movie.rating.average} />
+            </Box>
           </Box>
         </Box>
       </Paper>

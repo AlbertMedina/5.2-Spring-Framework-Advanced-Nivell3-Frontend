@@ -9,7 +9,6 @@ import defaultPoster from "../../assets/background-movie.webp";
 
 export default function MovieDetailsCard({
   movie,
-  rating,
   isAdmin,
   isUser,
   hasRented,
@@ -132,7 +131,7 @@ export default function MovieDetailsCard({
               "{movie.synopsis}"
             </Typography>
 
-            {rating && (
+            {movie.rating && (
               <Box sx={{ mt: 2 }}>
                 <Box>
                   <strong>Rating:</strong>
@@ -145,8 +144,8 @@ export default function MovieDetailsCard({
                     mt: 0.5,
                   }}
                 >
-                  <StarRatingDisplay rating={rating.average} />
-                  <Box>({rating.count} reviews)</Box>
+                  <StarRatingDisplay rating={movie.rating.average} />
+                  <Box>({movie.rating.count} reviews)</Box>
                 </Box>
               </Box>
             )}

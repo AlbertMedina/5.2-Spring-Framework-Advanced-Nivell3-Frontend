@@ -58,7 +58,7 @@ export default function MovieCard({ movie, onClick }) {
               left: 0,
               right: 0,
               height: "100%",
-              bgcolor: "rgba(0,0,0,0.7)",
+              bgcolor: "rgba(0,0,0,0.85)",
               color: "white",
               p: 2,
               opacity: 0,
@@ -83,7 +83,10 @@ export default function MovieCard({ movie, onClick }) {
                 mt: 0.5,
               }}
             >
-              <StarRatingDisplay rating={movie.rating.average} />
+              <StarRatingDisplay
+                rating={movie.rating.average}
+                color="secondary"
+              />
             </Box>
           </Box>
         </Box>

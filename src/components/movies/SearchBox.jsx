@@ -17,12 +17,12 @@ export default function SearchBox({
         borderRadius: 2,
         bgcolor: "#f7f7f7",
         boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        border: "1px solid #ddd",
+        border: "1px solid #3e0b00",
         "&:hover": { bgcolor: "#eaeaea" },
-        width, // amplada fixa
+        width,
       }}
     >
-      <SearchIcon sx={{ mr: 1, color: "#222" }} />
+      <SearchIcon sx={{ mr: 1, color: "#3e0b00" }} />
       <InputBase
         placeholder={placeholder}
         value={value}

@@ -20,7 +20,7 @@ export default function MovieDetailsCard({
   return (
     <Box
       sx={{
-        bgcolor: "background.paper",
+        bgcolor: "#3e0b00",
         p: 4,
         borderRadius: 3,
         boxShadow: 4,
@@ -40,10 +40,14 @@ export default function MovieDetailsCard({
       >
         {isAdmin && (
           <>
-            <IconButton color="inherit" onClick={onEdit} size="large">
+            <IconButton onClick={onEdit} size="large" sx={{ color: "#f5f5f5" }}>
               <EditIcon fontSize="large" />
             </IconButton>
-            <IconButton color="inherit" onClick={onDelete} size="large">
+            <IconButton
+              onClick={onDelete}
+              size="large"
+              sx={{ color: "#f5f5f5" }}
+            >
               <DeleteIcon fontSize="large" />
             </IconButton>
           </>
@@ -102,7 +106,14 @@ export default function MovieDetailsCard({
         </Grid>
 
         <Grid sx={{ flex: 1, minWidth: 300 }}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1,
+              color: "#f5f5f5",
+            }}
+          >
             <Typography
               variant="h4"
               gutterBottom
@@ -144,7 +155,10 @@ export default function MovieDetailsCard({
                     mt: 0.5,
                   }}
                 >
-                  <StarRatingDisplay rating={movie.rating.average} />
+                  <StarRatingDisplay
+                    rating={movie.rating.average}
+                    color="f5f5f5"
+                  />
                   <Box>({movie.rating.count} reviews)</Box>
                 </Box>
               </Box>

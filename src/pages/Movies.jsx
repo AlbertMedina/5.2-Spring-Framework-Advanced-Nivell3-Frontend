@@ -198,12 +198,12 @@ export default function Movies() {
           disabled={page === 0}
           onClick={() => handlePageChange(page - 1)}
           size="large"
-          sx={{ color: "#fff" }}
+          sx={{ color: "#3e0b00" }}
         >
           <ArrowBackIosNewIcon fontSize="large" />
         </IconButton>
 
-        <Typography sx={{ mt: 1, color: "#fff" }}>
+        <Typography sx={{ mt: 1, color: "#3e0b00" }}>
           PAGE {page + 1} OF {totalPages}
         </Typography>
 
@@ -211,7 +211,7 @@ export default function Movies() {
           disabled={!hasNext}
           onClick={() => handlePageChange(page + 1)}
           size="large"
-          sx={{ color: "#fff" }}
+          sx={{ color: "#3e0b00" }}
         >
           <ArrowForwardIosIcon fontSize="large" />
         </IconButton>

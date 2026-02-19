@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { lazy, Suspense, useContext } from "react";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -11,19 +11,16 @@ const AuthApp = lazy(() => import("./app/AuthApp"));
 const AdminApp = lazy(() => import("./app/AdminApp"));
 const UserApp = lazy(() => import("./app/UserApp"));
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-
 import Nav from "./components/core/Nav";
 import Footer from "./components/core/Footer";
 
-import DefaultBackgroundImage from "./assets/background-theater-red.png";
+import DefaultBackgroundImage from "./assets/background-movie.png";
 import AuthBackgroundImage from "./assets/background-videostore.png";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#222",
+      main: "#3e0b00",
       contrastText: "#fff",
     },
     secondary: {
@@ -53,7 +50,7 @@ function AppRoutes() {
     backgroundImage: `url(${DefaultBackgroundImage})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    backgroundPosition: "center top",
+    backgroundPosition: "center center",
     minHeight: "100vh",
     overflow: "auto",
   };

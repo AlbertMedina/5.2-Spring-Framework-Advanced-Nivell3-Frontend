@@ -21,8 +21,7 @@ export default function GenreSelector({ genres = [], value, onChange }) {
         alignItems: "center",
         borderRadius: 2,
         boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        bgcolor: "#222",
-        border: "1px solid #444444",
+        bgcolor: "#3e0b00",
         overflow: "hidden",
         minWidth: 80,
       }}
@@ -33,7 +32,7 @@ export default function GenreSelector({ genres = [], value, onChange }) {
           flex: 1,
           textTransform: "none",
           color: "#f5f5f5",
-          "&:hover": { bgcolor: "#333333" },
+          "&:hover": { bgcolor: "#6A1F0F" },
           whiteSpace: "nowrap",
         }}
       >
@@ -48,7 +47,7 @@ export default function GenreSelector({ genres = [], value, onChange }) {
         onClose={handleClose}
         sx={{
           "& .MuiPaper-root": {
-            bgcolor: "#222",
+            bgcolor: "#6A1F0F",
             color: "#f5f5f5",
             minWidth: 150,
           },
@@ -56,7 +55,7 @@ export default function GenreSelector({ genres = [], value, onChange }) {
       >
         <MenuItem
           onClick={() => handleSelect("")}
-          sx={{ "&:hover": { bgcolor: "#333333" } }}
+          sx={{ "&:hover": { bgcolor: "#3e0b00" } }}
         >
           All
         </MenuItem>
@@ -65,7 +64,7 @@ export default function GenreSelector({ genres = [], value, onChange }) {
           <MenuItem
             key={g}
             onClick={() => handleSelect(g)}
-            sx={{ "&:hover": { bgcolor: "#333333" } }}
+            sx={{ "&:hover": { bgcolor: "#3e0b00" } }}
           >
             {capitalize(g)}
           </MenuItem>

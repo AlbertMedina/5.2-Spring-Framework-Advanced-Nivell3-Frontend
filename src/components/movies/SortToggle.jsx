@@ -35,8 +35,7 @@ export default function SortToggle({
         borderRadius: 2,
         overflow: "hidden",
         boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        bgcolor: "#9F1A1A",
-        border: "1px solid #B03030",
+        bgcolor: "#3e0b00",
         width,
       }}
     >
@@ -45,8 +44,8 @@ export default function SortToggle({
         sx={{
           flex: 1,
           textTransform: "none",
-          color: "#222",
-          "&:hover": { bgcolor: "#AC2525" },
+          color: "#f5f5f5",
+          "&:hover": { bgcolor: "#6A1F0F" },
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -63,8 +62,8 @@ export default function SortToggle({
         onClose={handleMenuClose}
         sx={{
           "& .MuiPaper-root": {
-            bgcolor: "#f7f7f7",
-            color: "#222",
+            bgcolor: "#6A1F0F",
+            color: "#f5f5f5",
             minWidth: 120,
           },
         }}
@@ -73,7 +72,7 @@ export default function SortToggle({
           <MenuItem
             key={opt}
             onClick={() => handleSelectOption(opt)}
-            sx={{ "&:hover": { bgcolor: "#eaeaea" } }}
+            sx={{ "&:hover": { bgcolor: "#3e0b00" } }}
           >
             {opt === "TITLE" ? "Title" : "Rating"}
           </MenuItem>
@@ -85,8 +84,8 @@ export default function SortToggle({
           onClick={onToggleOrder}
           sx={{
             px: 1.5,
-            color: "#222",
-            "&:hover": { bgcolor: "#AC2525" },
+            color: "#f5f5f5",
+            "&:hover": { bgcolor: "#6A1F0F" },
           }}
         >
           {ascending ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}

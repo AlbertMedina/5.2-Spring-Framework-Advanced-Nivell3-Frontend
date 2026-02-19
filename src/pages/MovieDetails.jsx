@@ -224,15 +224,13 @@ export default function MovieDetails() {
           }}
         >
           {reviews.map((r) => {
-            const canDelete = isAdmin || r.userId === Number(userId);
+            const canDelete = r.userId === Number(userId);
             return (
               <ReviewCard
                 key={r.id}
                 review={r}
                 showDeleteButton={canDelete}
-                onDelete={(reviewId) => {
-                  setConfirmDeleteReviewOpen(true);
-                }}
+                onDelete={(reviewId) => setConfirmDeleteReviewOpen(true)}
               />
             );
           })}

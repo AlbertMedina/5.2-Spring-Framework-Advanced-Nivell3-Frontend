@@ -75,7 +75,7 @@ export default function MovieDetailsCard({
       </Box>
 
       <Grid container spacing={4} alignItems="flex-start">
-        <Grid item xs={4} sm={3} md={3}>
+        <Grid>
           <Box
             sx={{
               width: "100%",

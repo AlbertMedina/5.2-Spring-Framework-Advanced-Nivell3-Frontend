@@ -225,12 +225,6 @@ export default function MovieDetails() {
         >
           {reviews.map((r) => {
             const canDelete = isAdmin || r.userId === Number(userId);
-            console.log(
-              reviews.map((r) => r.userId),
-              userId
-            );
-            console.log(canDelete);
-
             return (
               <ReviewCard
                 key={r.id}

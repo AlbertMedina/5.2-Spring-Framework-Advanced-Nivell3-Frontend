@@ -31,7 +31,8 @@ export default function Movies() {
   const [error, setError] = useState("");
 
   const [page, setPage] = useState(0);
-  const pageSize = 9;
+  const adminPageSize = 9;
+  const userPageSize = 10;
 
   const [totalPages, setTotalPages] = useState(0);
   const [hasNext, setHasNext] = useState(false);
@@ -70,7 +71,7 @@ export default function Movies() {
       const data = await getAllMovies({
         token,
         page,
-        size: pageSize,
+        size: isAdmin ? adminPageSize : userPageSize,
         genre: genreFilter,
         onlyAvailable,
         title: titleFilter,

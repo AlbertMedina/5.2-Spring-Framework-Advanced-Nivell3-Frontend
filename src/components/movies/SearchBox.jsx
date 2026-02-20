@@ -28,7 +28,7 @@ export default function SearchBox({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         sx={{
-          color: "#222",
+          color: "#3e0b00",
           flex: 1,
           whiteSpace: "nowrap",
           overflow: "hidden",

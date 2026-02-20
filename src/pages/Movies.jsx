@@ -203,8 +203,21 @@ export default function Movies() {
           <ArrowBackIosNewIcon fontSize="large" />
         </IconButton>
 
-        <Typography sx={{ mt: 1, color: "#3e0b00" }}>
-          PAGE {page + 1} OF {totalPages}
+        <Typography
+          sx={{
+            mt: 1,
+            color: "#3e0b00",
+            fontWeight: "bold",
+          }}
+        >
+          PAGE{" "}
+          <Box component="span" sx={{ fontSize: "1.2em" }}>
+            {page + 1}
+          </Box>{" "}
+          OF{" "}
+          <Box component="span" sx={{ fontSize: "1.2em" }}>
+            {Math.max(totalPages, 1)}
+          </Box>
         </Typography>
 
         <IconButton

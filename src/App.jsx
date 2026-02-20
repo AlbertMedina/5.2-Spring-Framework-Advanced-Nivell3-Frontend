@@ -21,11 +21,11 @@ const theme = createTheme({
   palette: {
     primary: {
       main: "#3e0b00",
-      contrastText: "#fff",
+      contrastText: "#f5f5f5",
     },
     secondary: {
-      main: "#fff",
-      contrastText: "#222",
+      main: "#f5f5f5",
+      contrastText: "#3e0b00",
     },
   },
   typography: {

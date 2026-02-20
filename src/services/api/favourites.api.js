@@ -46,8 +46,26 @@ export async function removeFavourite(token, movieId) {
   return true;
 }
 
+export async function getMyFavourites(token) {
+  const res = await fetch(`${API_URL}/me/favourites`, {
+    headers: authHeaders(token),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json();
+    throw new Error(err.message || "Cannot get favourites");
+  }
+
+  return await res.json();
+}
+
 export async function userHasFavouriteMovie(token, movieId) {
-  const res = await fetch(`${API_URL}/favourites/movies/${movieId}`, {
+  const res = await fetch(`${API_URL}/me/favourites/${movieId}`, {
     headers: authHeaders(token),
   });
 

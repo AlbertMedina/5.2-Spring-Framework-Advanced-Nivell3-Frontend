@@ -36,6 +36,7 @@ export default function MovieDetails() {
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [rentConfirmOpen, setRentConfirmOpen] = useState(false);
   const [confirmDeleteReviewOpen, setConfirmDeleteReviewOpen] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState(null);
 
   const [hasRented, setHasRented] = useState(false);
 
@@ -107,7 +108,6 @@ export default function MovieDetails() {
   };
 
   const handleConfirmRentReturn = async () => {
-    setRentConfirmOpen(false);
     try {
       if (hasRented) {
         await returnMovie(token, movieId);
@@ -123,20 +123,21 @@ export default function MovieDetails() {
   };
 
   const handleConfirmDeleteReview = async () => {
-    setConfirmDeleteReviewOpen(false);
+    if (!reviewToDelete) return;
     try {
-      await removeReview(token, movie.id);
-      fetchReviews();
-      fetchMovieDetails();
+      await removeReview(token, reviewToDelete);
+      setReviewToDelete(null);
+      await fetchReviews();
+      await fetchMovieDetails();
     } catch (err) {
-      setErrorMessage(err.message || "Error deleting movie");
+      setErrorMessage(err.message || "Error deleting review");
       setErrorDialogOpen(true);
     }
   };
 
   const handleReviewAdded = async () => {
-    await fetchReviews(); // actualitza la llista de reviews
-    await fetchMovieDetails(); // actualitza les dades de la peli (rating avg, etc.)
+    await fetchReviews();
+    await fetchMovieDetails();
   };
 
   if (loading || authLoading) return <CircularProgress />;
@@ -167,7 +168,10 @@ export default function MovieDetails() {
       <ConfirmDialog
         open={confirmDeleteMovieOpen}
         text="Are you sure you want to delete this movie?"
-        onConfirm={handleConfirmDeleteMovie}
+        onConfirm={() => {
+          setConfirmDeleteMovieOpen(false);
+          handleConfirmDeleteMovie();
+        }}
         onCancel={() => setConfirmDeleteMovieOpen(false)}
       />
 
@@ -178,15 +182,24 @@ export default function MovieDetails() {
             ? "Are you sure you want to return this movie?"
             : "Are you sure you want to rent this movie?"
         }
-        onConfirm={handleConfirmRentReturn}
+        onConfirm={() => {
+          setRentConfirmOpen(false);
+          handleConfirmRentReturn();
+        }}
         onCancel={() => setRentConfirmOpen(false)}
       />
 
       <ConfirmDialog
         open={confirmDeleteReviewOpen}
         text="Are you sure you want to delete this review?"
-        onConfirm={handleConfirmDeleteReview}
-        onCancel={() => setConfirmDeleteReviewOpen(false)}
+        onConfirm={() => {
+          setConfirmDeleteReviewOpen(false);
+          handleConfirmDeleteReview();
+        }}
+        onCancel={() => {
+          setConfirmDeleteReviewOpen(false);
+          setReviewToDelete(null);
+        }}
       />
 
       <UpdateMovieModal
@@ -224,13 +237,16 @@ export default function MovieDetails() {
           }}
         >
           {reviews.map((r) => {
-            const canDelete = r.userId === Number(userId);
+            const canDelete = isAdmin || r.userId === Number(userId);
             return (
               <ReviewCard
                 key={r.id}
                 review={r}
                 showDeleteButton={canDelete}
-                onDelete={(reviewId) => setConfirmDeleteReviewOpen(true)}
+                onDelete={(reviewId) => {
+                  setReviewToDelete(reviewId);
+                  setConfirmDeleteReviewOpen(true);
+                }}
               />
             );
           })}

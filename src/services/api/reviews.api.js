@@ -27,8 +27,8 @@ export async function addReview(token, { movieId, rating, comment }) {
   return await res.json();
 }
 
-export async function removeReview(token, movieId) {
-  const res = await fetch(`${API_URL}/reviews/${movieId}`, {
+export async function removeReview(token, reviewId) {
+  const res = await fetch(`${API_URL}/reviews/${reviewId}`, {
     method: "DELETE",
     headers: authHeaders(token),
   });

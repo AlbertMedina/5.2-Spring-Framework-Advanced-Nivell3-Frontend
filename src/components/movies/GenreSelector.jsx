@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
 
+import { capitalizeWords } from "../../utils/stringUtils";
+
 export default function GenreSelector({ genres = [], value, onChange }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -10,9 +12,6 @@ export default function GenreSelector({ genres = [], value, onChange }) {
     onChange(genre);
     handleClose();
   };
-
-  const capitalize = (str) =>
-    str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
   return (
     <Box
@@ -37,7 +36,7 @@ export default function GenreSelector({ genres = [], value, onChange }) {
         }}
       >
         <Typography sx={{ fontWeight: 500, textAlign: "center", flex: 1 }}>
-          {value ? capitalize(value) : "All Genres"}
+          {value ? capitalizeWords(value) : "All Genres"}
         </Typography>
       </Button>
 
@@ -66,7 +65,7 @@ export default function GenreSelector({ genres = [], value, onChange }) {
             onClick={() => handleSelect(g)}
             sx={{ "&:hover": { bgcolor: "#3e0b00" } }}
           >
-            {capitalize(g)}
+            {capitalizeWords(g)}
           </MenuItem>
         ))}
       </Menu>

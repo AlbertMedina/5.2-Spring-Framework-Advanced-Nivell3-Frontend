@@ -1,163 +1,151 @@
 import { useEffect, useState, useContext } from "react";
-import {
-  Typography,
-  Box,
-  CircularProgress,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Button,
-} from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
+import { Box, CircularProgress, Typography } from "@mui/material";
+
+import { getUser, removeUser, getUserRentals } from "../../services/api";
 import AuthContext from "../../services/auth.context";
-import { getUser, getUserRentals, removeUser } from "../../services/api";
+
+import UserDetailsCard from "../../components/users/UserDetailsCard";
+import RentalCard from "../../components/shared/RentalCard";
 import ConfirmDialog from "../../components/shared/ConfirmDialog";
+import ErrorDialog from "../../components/shared/ErrorDialog";
 
 export default function UserDetails() {
-  const { token } = useContext(AuthContext);
   const { userId } = useParams();
+  const { token, loading: authLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
   const [rentals, setRentals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [removing, setRemoving] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [confirmDeleteUserOpen, setConfirmDeleteUserOpen] = useState(false);
+
+  const fetchUserDetails = async () => {
+    try {
+      setLoading(true);
+      const data = await getUser(token, userId);
+      setUser(data);
+    } catch (err) {
+      setErrorMessage(err.message || "Error fetching user");
+      setErrorDialogOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!token) return;
 
     let cancelled = false;
 
-    const fetchUserData = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const userData = await getUser(token, userId);
-        const rentalsData = await getUserRentals(token, userId);
-
-        if (!cancelled) {
-          setUser(userData);
-          setRentals(rentalsData);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.message);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchUserData();
+    fetchUserDetails();
 
     return () => {
       cancelled = true;
     };
   }, [token, userId]);
 
-  const handleRemoveClick = () => {
-    setConfirmOpen(true);
-  };
-
-  const handleConfirmRemove = async () => {
+  const fetchRentals = async () => {
     try {
-      setRemoving(true);
-      await removeUser(token, userId);
-      setConfirmOpen(false);
-      navigate("/users");
+      const data = await getUserRentals(token, userId);
+      setRentals(data);
     } catch (err) {
-      setError(err.message);
-      setConfirmOpen(false);
-    } finally {
-      setRemoving(false);
+      setErrorMessage(err.message || "Error fetching rentals");
+      setErrorDialogOpen(true);
     }
   };
 
-  const handleCancelRemove = () => {
-    setConfirmOpen(false);
+  useEffect(() => {
+    if (token && userId) fetchRentals();
+  }, [token, userId]);
+
+  const handleConfirmDeleteUser = async () => {
+    setConfirmDeleteUserOpen(false);
+    try {
+      await removeUser(token, userId);
+      navigate("/users");
+    } catch (err) {
+      setErrorMessage(err.message || "Error deleting user");
+      setErrorDialogOpen(true);
+    }
   };
 
-  if (loading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
-        <Typography color="error">{error}</Typography>
-      </Box>
-    );
-  }
-
+  if (loading || authLoading) return <CircularProgress />;
   if (!user) return null;
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
-      <Typography variant="h5" gutterBottom>
-        User details
-      </Typography>
+    <Box
+      sx={{
+        mt: 12,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        gap: 5,
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <UserDetailsCard
+          user={user}
+          canDelete={true}
+          onDelete={() => setConfirmDeleteUserOpen(true)}
+        />
 
-      <Typography>
-        <strong>Name:</strong> {user.name}
-      </Typography>
-      <Typography>
-        <strong>Surname:</strong> {user.surname}
-      </Typography>
-      <Typography>
-        <strong>Username:</strong> @{user.username}
-      </Typography>
-      <Typography>
-        <strong>Email:</strong> {user.email}
-      </Typography>
+        <ConfirmDialog
+          open={confirmDeleteUserOpen}
+          text="Are you sure you want to delete this user?"
+          onConfirm={() => {
+            setConfirmDeleteUserOpen(false);
+            handleConfirmDeleteUser();
+          }}
+          onCancel={() => setConfirmDeleteUserOpen(false)}
+        />
 
-      <Divider sx={{ my: 3 }} />
+        <ErrorDialog
+          open={errorDialogOpen}
+          onClose={() => setErrorDialogOpen(false)}
+          message={errorMessage}
+        />
 
-      <Typography variant="h6" gutterBottom>
-        Active rentals
-      </Typography>
-
-      {rentals.length === 0 ? (
-        <Typography>No active rentals</Typography>
-      ) : (
-        <List>
-          {rentals.map((rental) => (
-            <ListItem key={rental.id}>
-              <ListItemText
-                primary={rental.movieTitle}
-                secondary={`Rented on ${rental.rentedAt}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-      )}
-
-      <Box sx={{ mt: 4 }}>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleRemoveClick}
-          disabled={removing}
+        <Box
+          sx={{
+            bgcolor: "#3e0b00",
+            p: 4,
+            borderRadius: 3,
+            width: "100%",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            mt: 2,
+          }}
         >
-          {removing ? "Removing..." : "Delete User"}
-        </Button>
+          {rentals.length > 0 ? (
+            rentals.map((r) => <RentalCard key={r.id} rental={r} />)
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 50,
+              }}
+            >
+              <Typography sx={{ color: "#f5f5f5", fontWeight: "bold" }}>
+                No movies rented
+              </Typography>
+            </Box>
+          )}
+        </Box>
       </Box>
-
-      <ConfirmDialog
-        open={confirmOpen}
-        text={`Are you sure you want to remove user ${user.username}?`}
-        onConfirm={handleConfirmRemove}
-        onCancel={handleCancelRemove}
-      />
     </Box>
   );
 }

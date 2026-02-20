@@ -1,50 +1,38 @@
 import { useEffect, useState, useContext } from "react";
-import {
-  List,
-  ListItemButton,
-  ListItemText,
-  Typography,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Box, CircularProgress, Typography } from "@mui/material";
+
 import { getAllUsers } from "../../services/api";
 import AuthContext from "../../services/auth.context";
-import { useNavigate } from "react-router-dom";
+
+import UserCard from "../../components/users/UserCard";
+import ErrorDialog from "../../components/shared/ErrorDialog";
 
 export default function Users() {
-  const { token } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { token, loading: authLoading } = useContext(AuthContext);
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const data = await getAllUsers(token);
+      setUsers(data);
+    } catch (err) {
+      setErrorMessage(err.message || "Error fetching users");
+      setErrorDialogOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!token) return;
 
     let cancelled = false;
-
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const data = await getAllUsers(token);
-
-        if (!cancelled) {
-          setUsers(data);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.message);
-          setUsers([]);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    };
 
     fetchUsers();
 
@@ -53,41 +41,89 @@ export default function Users() {
     };
   }, [token]);
 
-  if (loading) {
+  const navigate = useNavigate();
+
+  const handleUserClick = (userId) => {
+    navigate(`/users/${userId}`);
+  };
+
+  if (loading || authLoading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: "transparent",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
   }
 
+  if (!users) return null;
+
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
-      <Typography variant="h5" gutterBottom>
-        Users
-      </Typography>
-
-      {error && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {error}
-        </Typography>
-      )}
-
-      <List>
-        {users.map((user) => (
-          <ListItemButton
-            key={user.id}
-            onClick={() => navigate(`/users/${user.id}`)}
+    <Box
+      sx={{
+        mt: 12,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        gap: 5,
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {users.length > 0 ? (
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                md: "repeat(3, 1fr)",
+              },
+              rowGap: 8,
+              columnGap: 16,
+              width: "100%",
+            }}
           >
-            <ListItemText
-              primary={`${user.name} ${user.surname}`}
-              secondary={`@${user.username}`}
-            />
-          </ListItemButton>
-        ))}
-      </List>
+            {users.map((u) => (
+              <UserCard
+                key={u.id}
+                user={u}
+                onClick={() => handleUserClick(u.id)}
+              />
+            ))}
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: 50,
+            }}
+          >
+            <Typography sx={{ color: "#3e0b00", fontWeight: "bold" }}>
+              No users registered
+            </Typography>
+          </Box>
+        )}
 
-      {!users.length && !error && <Typography>No users found</Typography>}
+        <ErrorDialog
+          open={errorDialogOpen}
+          onClose={() => setErrorDialogOpen(false)}
+          message={errorMessage}
+        />
+      </Box>
     </Box>
   );
 }

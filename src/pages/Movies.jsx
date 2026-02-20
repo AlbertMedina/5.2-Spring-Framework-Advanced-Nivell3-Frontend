@@ -148,9 +148,9 @@ export default function Movies() {
             />
 
             <HideUnavailableCheckbox
-              checked={!onlyAvailable}
+              checked={onlyAvailable}
               onChange={(newValue) => {
-                setOnlyAvailable(!newValue);
+                setOnlyAvailable(newValue);
                 setPage(0);
               }}
             />

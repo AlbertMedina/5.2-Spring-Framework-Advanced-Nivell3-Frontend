@@ -93,6 +93,10 @@ export default function Movies() {
     fetchMovies();
   }, [token, page, titleFilter, genreFilter, onlyAvailable, sortBy, ascending]);
 
+  const handleMovieClick = (movieId) => {
+    navigate(`/movies/${movieId}`);
+  };
+
   const handlePageChange = (newPage) => setPage(newPage);
 
   return (
@@ -178,7 +182,7 @@ export default function Movies() {
               <Grid key={movie.id}>
                 <MovieCard
                   movie={movie}
-                  onClick={() => navigate(`/movies/${movie.id}`)}
+                  onClick={() => handleMovieClick(movie.id)}
                 />
               </Grid>
             ))}

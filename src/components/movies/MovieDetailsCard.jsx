@@ -66,7 +66,7 @@ export default function MovieDetailsCard({
 
             {hasRented && (
               <Button
-                variant="outlined"
+                variant="contained"
                 size="small"
                 startIcon={<RateReviewIcon />}
                 onClick={onReview}

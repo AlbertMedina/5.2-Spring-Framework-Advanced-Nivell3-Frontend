@@ -10,6 +10,7 @@ export default function RentalCard({ rental }) {
         bgcolor: "white",
         borderRadius: 2,
         boxShadow: 1,
+        color: "#3e0b00",
         width: "100%",
         display: "flex",
         flexDirection: "column",

@@ -101,7 +101,7 @@ export default function MovieDetails() {
   };
 
   useEffect(() => {
-    if (token && movieId) fetchRentals();
+    if (token && movieId && isAdmin) fetchRentals();
   }, [token, movieId]);
 
   const handleConfirmDeleteMovie = async () => {
@@ -281,7 +281,7 @@ export default function MovieDetails() {
           message={errorMessage}
         />
       </Box>
-      {isAdmin && (
+      {isAdmin && rentals.length > 0 && (
         <Box
           sx={{
             bgcolor: "#3e0b00",

@@ -29,6 +29,7 @@ const theme = createTheme({
     },
   },
   typography: {
+    fontFamily: "'Raleway', Arial, sans-serif",
     body1: {
       fontSize: "1.4rem",
     },

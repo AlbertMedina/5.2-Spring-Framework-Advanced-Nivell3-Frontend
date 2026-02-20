@@ -87,6 +87,7 @@ export default function MovieCard({ movie, onClick }) {
                 rating={movie.rating.average}
                 color="secondary"
               />
+              <Typography variant="body2">({movie.rating.count})</Typography>
             </Box>
           </Box>
         </Box>

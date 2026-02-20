@@ -77,11 +77,29 @@ export default function UpdateMovieModal({
 
   return (
     <>
-      <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Update Movie</DialogTitle>
-
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="sm"
+        fullWidth
+        slotProps={{
+          backdrop: {
+            sx: {
+              bgcolor: "rgba(0, 0, 0, 0.6)",
+            },
+          },
+        }}
+      >
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            pt: 4,
+            pb: 2,
+            pr: 4,
+            pl: 4,
+          }}
         >
           <TextField
             label="Title"
@@ -125,9 +143,43 @@ export default function UpdateMovieModal({
           />
         </DialogContent>
 
-        <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained" disabled={loading}>
+        <DialogActions
+          sx={{
+            justifyContent: "center",
+            gap: 2,
+            pt: 2,
+            pb: 4,
+            pr: 4,
+            pl: 4,
+          }}
+        >
+          <Button
+            onClick={onClose}
+            variant="outlined"
+            sx={{
+              color: "#3e0b00",
+              borderColor: "#3e0b00",
+              bgcolor: "#f5f5f5",
+              "&:hover": {
+                bgcolor: "#f5f5f5",
+                borderColor: "#3e0b00",
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSave}
+            variant="contained"
+            disabled={loading}
+            sx={{
+              bgcolor: "#3e0b00",
+              color: "#f5f5f5",
+              "&:hover": {
+                bgcolor: "#2e0800",
+              },
+            }}
+          >
             Save
           </Button>
         </DialogActions>

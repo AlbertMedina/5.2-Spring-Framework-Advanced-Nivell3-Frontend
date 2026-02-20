@@ -98,105 +98,193 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
 
   return (
     <>
-      <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Add New Movie</DialogTitle>
-
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="md"
+        fullWidth
+        slotProps={{
+          backdrop: {
+            sx: {
+              bgcolor: "rgba(0, 0, 0, 0.6)",
+            },
+          },
+        }}
+      >
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 3,
+            pt: 4,
+            pb: 2,
+            pr: 4,
+            pl: 4,
+          }}
         >
-          <TextField
-            label="Title"
-            name="title"
-            value={newMovie.title}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Year"
-            name="year"
-            type="number"
-            value={newMovie.year}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Genre"
-            name="genre"
-            value={newMovie.genre}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Duration"
-            name="duration"
-            type="number"
-            value={newMovie.duration}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Director"
-            name="director"
-            value={newMovie.director}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Synopsis"
-            name="synopsis"
-            value={newMovie.synopsis}
-            onChange={handleChange}
-            multiline
-            rows={3}
-          />
-          <TextField
-            label="Number of Copies"
-            name="copies"
-            type="number"
-            value={newMovie.copies}
-            onChange={handleChange}
-          />
-
-          {!posterPreview && (
-            <Button variant="contained" component="label">
-              Upload Poster
-              <input
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-            </Button>
-          )}
-
-          {posterPreview && (
-            <Box sx={{ position: "relative" }}>
+          <Box
+            sx={{
+              flexShrink: 0,
+              width: 410,
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              alignItems: "center",
+            }}
+          >
+            {!posterPreview && (
               <Box
-                component="img"
-                src={posterPreview}
-                alt="Poster preview"
                 sx={{
                   width: "100%",
-                  height: 300,
-                  objectFit: "cover",
+                  aspectRatio: "2 / 3",
+                  border: "2px dashed #3e0b00",
                   borderRadius: 1,
-                }}
-              />
-              <IconButton
-                onClick={handleRemovePoster}
-                sx={{
-                  position: "absolute",
-                  top: 8,
-                  right: 8,
-                  backgroundColor: "rgba(0,0,0,0.6)",
-                  color: "white",
-                  "&:hover": { backgroundColor: "rgba(0,0,0,0.8)" },
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          )}
+                <Button variant="contained" component="label">
+                  Upload Poster
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                </Button>
+              </Box>
+            )}
+
+            {posterPreview && (
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "100%",
+                  aspectRatio: "2 / 3",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={posterPreview}
+                  alt="Poster preview"
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: 1,
+                  }}
+                />
+                <IconButton
+                  onClick={handleRemovePoster}
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    backgroundColor: "rgba(0,0,0,0.6)",
+                    color: "white",
+                    "&:hover": { backgroundColor: "rgba(0,0,0,0.8)" },
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            )}
+          </Box>
+
+          <Box
+            sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}
+          >
+            <TextField
+              label="Title"
+              name="title"
+              value={newMovie.title}
+              onChange={handleChange}
+            />
+            <TextField
+              label="Year"
+              name="year"
+              type="number"
+              value={newMovie.year}
+              onChange={handleChange}
+            />
+            <TextField
+              label="Genre"
+              name="genre"
+              value={newMovie.genre}
+              onChange={handleChange}
+            />
+            <TextField
+              label="Duration"
+              name="duration"
+              type="number"
+              value={newMovie.duration}
+              onChange={handleChange}
+            />
+            <TextField
+              label="Director"
+              name="director"
+              value={newMovie.director}
+              onChange={handleChange}
+            />
+            <TextField
+              label="Synopsis"
+              name="synopsis"
+              value={newMovie.synopsis}
+              onChange={handleChange}
+              multiline
+              rows={3}
+            />
+            <TextField
+              label="Number of Copies"
+              name="copies"
+              type="number"
+              value={newMovie.copies}
+              onChange={handleChange}
+            />
+          </Box>
         </DialogContent>
 
-        <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained" disabled={loading}>
+        <DialogActions
+          sx={{
+            justifyContent: "center",
+            gap: 2,
+            pt: 2,
+            pb: 4,
+            pr: 4,
+            pl: 4,
+          }}
+        >
+          <Button
+            onClick={onClose}
+            variant="outlined"
+            sx={{
+              color: "#3e0b00",
+              borderColor: "#3e0b00",
+              bgcolor: "#f5f5f5",
+              "&:hover": {
+                bgcolor: "#f5f5f5",
+                borderColor: "#3e0b00",
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSave}
+            variant="contained"
+            disabled={loading}
+            sx={{
+              bgcolor: "#3e0b00",
+              color: "#f5f5f5",
+              "&:hover": {
+                bgcolor: "#2e0800",
+              },
+            }}
+          >
             Save
           </Button>
         </DialogActions>

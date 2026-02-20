@@ -3,7 +3,11 @@ import { Box, IconButton } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 
-export default function StarRatingInput({ value, onChange }) {
+export default function StarRatingInput({
+  value,
+  onChange,
+  color = "primary",
+}) {
   const [hover, setHover] = useState(0);
 
   return (
@@ -17,9 +21,9 @@ export default function StarRatingInput({ value, onChange }) {
           onMouseLeave={() => setHover(0)}
         >
           {star <= (hover || value) ? (
-            <StarIcon color="warning" />
+            <StarIcon color={color} />
           ) : (
-            <StarBorderIcon color="warning" />
+            <StarBorderIcon color={color} />
           )}
         </IconButton>
       ))}

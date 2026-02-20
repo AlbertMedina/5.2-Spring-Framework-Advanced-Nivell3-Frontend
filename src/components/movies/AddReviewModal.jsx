@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Modal, Typography, Button, TextField } from "@mui/material";
 
-import StarRatingInput from "../movies/StarRatingInput";
+import StarRatingInput from "./StarRatingInput";
 import ErrorDialog from "../shared/ErrorDialog";
 import { addReview } from "../../services/api";
 
@@ -37,25 +37,31 @@ export default function AddReviewModal({
 
   return (
     <>
-      <Modal open={open} onClose={onClose}>
+      <Modal
+        open={open}
+        onClose={onClose}
+        slotProps={{
+          backdrop: {
+            sx: {
+              bgcolor: "rgba(0, 0, 0, 0.6)",
+            },
+          },
+        }}
+      >
         <Box
           sx={{
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
+            bgcolor: "#f5f5f5",
             p: 4,
             borderRadius: 2,
             width: 400,
           }}
         >
-          <Typography variant="h6" gutterBottom>
-            Add Review
-          </Typography>
-
           <Box sx={{ mb: 2 }}>
-            <Typography gutterBottom>
+            <Typography gutterBottom color="#3e0b00">
               <strong>Rating:</strong>
             </Typography>
             <StarRatingInput value={rating} onChange={setRating} />
@@ -71,13 +77,39 @@ export default function AddReviewModal({
           />
 
           <Box
-            sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 3 }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 1,
+              mt: 3,
+            }}
           >
-            <Button onClick={onClose}>Cancel</Button>
+            <Button
+              onClick={onClose}
+              variant="outlined"
+              sx={{
+                color: "#3e0b00",
+                borderColor: "#3e0b00",
+                bgcolor: "#f5f5f5",
+                "&:hover": {
+                  bgcolor: "#f5f5f5",
+                  borderColor: "#3e0b00",
+                },
+              }}
+            >
+              Cancel
+            </Button>
             <Button
               variant="contained"
               onClick={handleSubmit}
-              disabled={rating === 0 || loading}
+              disabled={rating === 0 || comment.trim() === "" || loading}
+              sx={{
+                bgcolor: "#3e0b00",
+                color: "#f5f5f5",
+                "&:hover": {
+                  bgcolor: "#2e0800",
+                },
+              }}
             >
               Submit
             </Button>

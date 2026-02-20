@@ -15,7 +15,7 @@ import {
 import AuthContext from "../services/auth.context";
 
 import UpdateMovieModal from "../components/admin/UpdateMovieModal";
-import AddReviewModal from "../components/admin/AddReviewModal";
+import AddReviewModal from "../components/movies/AddReviewModal";
 import MovieDetailsCard from "../components/movies/MovieDetailsCard";
 import ReviewCard from "../components/movies/ReviewCard";
 import RentalCard from "../components/movies/RentalCard";

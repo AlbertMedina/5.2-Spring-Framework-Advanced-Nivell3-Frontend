@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import userAvatar from "../../assets/user-avatar.webp";
 import { capitalizeWords } from "../../utils/stringUtils";
 
-export default function UserDetailsVard({ user, canDelete, onDelete }) {
+export default function UserDetailsCard({ user, canDelete, onDelete }) {
   return (
     <Box
       sx={{

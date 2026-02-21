@@ -1,13 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  Box,
-  Typography,
-  CircularProgress,
-  Grid,
-  IconButton,
-} from "@mui/material";
+import { Box, Typography, CircularProgress, Grid } from "@mui/material";
 
 import { getMyFavourites } from "../../services/api";
 import AuthContext from "../../services/auth.context";

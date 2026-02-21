@@ -72,7 +72,22 @@ export default function UserDetails() {
     }
   };
 
-  if (loading || authLoading) return <CircularProgress />;
+  if (loading || authLoading) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: "transparent",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   if (!user) return null;
 
   return (

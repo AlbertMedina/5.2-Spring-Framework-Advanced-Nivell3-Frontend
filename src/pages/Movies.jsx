@@ -21,14 +21,14 @@ import SortToggle from "../components/movies/SortToggle";
 import HideUnavailableCheckbox from "../components/movies/HideUnavailableCheckbox.jsx";
 import AddMovieCard from "../components/admin/AddMovieCard";
 import AddMovieModal from "../components/admin/AddMovieModal";
+import ErrorDialog from "../components/shared/ErrorDialog";
 
 export default function Movies() {
-  const { token, role } = useContext(AuthContext);
+  const { token, role, loading: authLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   const [page, setPage] = useState(0);
   const adminPageSize = 9;
@@ -45,6 +45,9 @@ export default function Movies() {
   const [genres, setGenres] = useState([]);
 
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const isAdmin = role === "ADMIN";
 
   const fetchGenres = async () => {
@@ -52,7 +55,10 @@ export default function Movies() {
       const data = await getGenres(token);
       setGenres(data);
     } catch (err) {
-      console.error(err);
+      setErrorMessage(err.message || "Error fetching genres");
+      setErrorDialogOpen(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,10 +69,8 @@ export default function Movies() {
 
   const fetchMovies = async () => {
     if (!token) return;
-
     try {
       setLoading(true);
-      setError("");
 
       const data = await getAllMovies({
         token,
@@ -83,7 +87,8 @@ export default function Movies() {
       setTotalPages(data.totalPages);
       setHasNext(data.hasNext);
     } catch (err) {
-      setError(err.message);
+      setErrorMessage(err.message || "Error fetching movies");
+      setErrorDialogOpen(true);
     } finally {
       setLoading(false);
     }
@@ -98,6 +103,24 @@ export default function Movies() {
   };
 
   const handlePageChange = (newPage) => setPage(newPage);
+
+  if (loading || authLoading) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: "transparent",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!movies) return null;
 
   return (
     <Box
@@ -162,32 +185,27 @@ export default function Movies() {
           </Box>
         </Box>
 
-        {loading && <CircularProgress />}
-        {error && <Typography color="error">{error}</Typography>}
+        <Grid
+          container
+          spacing={6}
+          justifyContent="center"
+          sx={{ mt: 6, columnGap: 16 }}
+        >
+          {isAdmin && (
+            <Grid>
+              <AddMovieCard onClick={() => setOpenAddModal(true)} />
+            </Grid>
+          )}
 
-        {!loading && !error && (
-          <Grid
-            container
-            spacing={6}
-            justifyContent="center"
-            sx={{ mt: 6, columnGap: 16 }}
-          >
-            {isAdmin && (
-              <Grid>
-                <AddMovieCard onClick={() => setOpenAddModal(true)} />
-              </Grid>
-            )}
-
-            {movies.map((movie) => (
-              <Grid key={movie.id}>
-                <MovieCard
-                  movie={movie}
-                  onClick={() => handleMovieClick(movie.id)}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        )}
+          {movies.map((movie) => (
+            <Grid key={movie.id}>
+              <MovieCard
+                movie={movie}
+                onClick={() => handleMovieClick(movie.id)}
+              />
+            </Grid>
+          ))}
+        </Grid>
       </Box>
 
       <Box
@@ -245,6 +263,12 @@ export default function Movies() {
           fetchMovies();
           fetchGenres();
         }}
+      />
+
+      <ErrorDialog
+        open={errorDialogOpen}
+        onClose={() => setErrorDialogOpen(false)}
+        message={errorMessage}
       />
     </Box>
   );

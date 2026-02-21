@@ -7,7 +7,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import StarRatingDisplay from "../movies/StarRatingDisplay";
-import defaultPoster from "../../assets/background-movie.webp";
+import defaultPoster from "../../assets/background-movie-default.webp";
 
 export default function MovieDetailsCard({
   movie,

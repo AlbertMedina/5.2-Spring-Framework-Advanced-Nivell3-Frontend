@@ -2,7 +2,7 @@ import { Paper, Typography, Box, ButtonBase } from "@mui/material";
 
 import StarRatingDisplay from "../movies/StarRatingDisplay";
 
-import defaultPoster from "../../assets/background-movie.webp";
+import defaultPoster from "../../assets/background-movie-default.webp";
 
 export default function MovieCard({ movie, onClick }) {
   return (

@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 import {
   getMovie,
@@ -320,7 +320,7 @@ export default function MovieDetails() {
           message={errorMessage}
         />
       </Box>
-      {isAdmin && rentals.length > 0 && (
+      {isAdmin && (
         <Box
           sx={{
             bgcolor: "#3e0b00",
@@ -334,9 +334,17 @@ export default function MovieDetails() {
             gap: 2,
           }}
         >
-          {rentals.map((r) => {
-            return <RentalCard key={r.id} rental={r} onClick={null} />;
-          })}
+          {rentals.length > 0 ? (
+            rentals.map((r) => (
+              <RentalCard key={r.id} rental={r} onClick={null} />
+            ))
+          ) : (
+            <Typography
+              sx={{ color: "#f5f5f5", fontWeight: "bold", textAlign: "center" }}
+            >
+              No active rentals for this movie
+            </Typography>
+          )}
         </Box>
       )}
     </Box>

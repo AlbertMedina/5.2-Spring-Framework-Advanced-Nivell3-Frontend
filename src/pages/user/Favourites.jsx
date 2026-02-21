@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, Typography, CircularProgress, Grid } from "@mui/material";
+import { Box, Typography, CircularProgress, Grid, Button } from "@mui/material";
 
 import { getMyFavourites } from "../../services/api";
 import AuthContext from "../../services/auth.context";
@@ -40,7 +40,9 @@ export default function Favourites() {
     navigate(`/movies/${movieId}`);
   };
 
-  const handlePageChange = (newPage) => setPage(newPage);
+  const handleExploreMoviesClick = () => {
+    navigate(`/movies`);
+  };
 
   if (loading || authLoading) {
     return (
@@ -81,7 +83,10 @@ export default function Favourites() {
       >
         {favourites.map((f) => (
           <Grid key={f.id}>
-            <MovieCard movie={f} onClick={() => handleFavouriteClick(f.id)} />
+            <MovieCard
+              movie={f}
+              onClick={() => handleFavouriteClick(f.movie.id)}
+            />
           </Grid>
         ))}
       </Grid>
@@ -90,15 +95,29 @@ export default function Favourites() {
     <Box
       sx={{
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        gap: 5,
         height: 50,
         mt: 12,
       }}
     >
       <Typography sx={{ color: "#3e0b00", fontWeight: "bold" }}>
-        No favourites
+        No movies added to favourites
       </Typography>
+      <Button
+        onClick={handleExploreMoviesClick}
+        variant="contained"
+        sx={{
+          bgcolor: "#3e0b00",
+          color: "#f5f5f5",
+          "&:hover": {
+            bgcolor: "#2e0800",
+          },
+        }}
+      >
+        Start exploring movies
+      </Button>
     </Box>
   );
 }

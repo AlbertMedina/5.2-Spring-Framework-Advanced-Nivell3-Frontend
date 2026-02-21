@@ -14,12 +14,20 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import AuthContext from "../../services/auth.context";
 
+import logo from "../../assets/logo-light-nav.png";
+
 export default function UserNav() {
   const { logout } = useContext(AuthContext);
 
   return (
     <AppBar position="fixed">
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          position: "relative",
+        }}
+      >
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button color="inherit" component={NavLink} to="/">
             <Typography variant="body1" color="inherit">
@@ -37,6 +45,20 @@ export default function UserNav() {
             </Typography>
           </Button>
         </Box>
+
+        <Box
+          component="img"
+          src={logo}
+          alt="Afegir pel·lícula"
+          sx={{
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            aspectRatio: "6 / 2",
+            width: 300,
+            objectFit: "cover",
+          }}
+        />
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton color="inherit" component={NavLink} to="/me" size="large">

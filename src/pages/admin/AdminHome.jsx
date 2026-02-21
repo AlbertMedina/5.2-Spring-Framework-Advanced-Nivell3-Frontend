@@ -1,13 +1,38 @@
 import { Typography, Container, Box } from "@mui/material";
 
-export default function AdminHome() {
+import logo from "../../assets/logo-dark.png";
+
+export default function UserHome() {
   return (
-    <Container maxWidth="md">
-      <Box sx={{ mt: 12, display: "flex", justifyContent: "center" }}>
-        <Typography variant="h2" component="h1">
-          Admin Home
-        </Typography>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mt: 12,
+          mb: 12,
+        }}
+      >
+        <Box
+          component="img"
+          src={logo}
+          alt="Afegir pel·lícula"
+          sx={{
+            aspectRatio: "6 / 2",
+            width: 1200,
+            objectFit: "cover",
+            maxWidth: "100%",
+          }}
+        />
       </Box>
-    </Container>
+    </Box>
   );
 }

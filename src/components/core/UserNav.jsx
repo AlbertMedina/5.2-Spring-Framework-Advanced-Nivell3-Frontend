@@ -55,7 +55,7 @@ export default function UserNav() {
             left: "50%",
             transform: "translateX(-50%)",
             aspectRatio: "6 / 2",
-            width: 300,
+            width: 350,
             objectFit: "cover",
           }}
         />

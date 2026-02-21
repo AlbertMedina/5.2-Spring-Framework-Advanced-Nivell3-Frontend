@@ -1,8 +1,10 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
-import AuthContext from "../services/auth.context";
+
+import { TextField, Button, Typography, Box } from "@mui/material";
+
 import { loginUser } from "../services/api";
+import AuthContext from "../services/auth.context";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -43,7 +45,8 @@ export default function Login() {
     >
       <Box
         sx={{
-          mt: 8,
+          mb: 12,
+          p: 4,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -51,9 +54,8 @@ export default function Login() {
           maxWidth: 600,
           bgcolor: "#f5f5f5",
           color: "#3e0b00",
-          p: 4,
           borderRadius: 4,
-          mb: 15,
+          boxShadow: 20,
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>

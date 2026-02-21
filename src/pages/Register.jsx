@@ -1,30 +1,32 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
-import AuthContext from "../services/auth.context";
+
+import { TextField, Button, Typography, Box } from "@mui/material";
+
 import { registerUser } from "../services/api";
+
+import ErrorDialog from "../components/shared/ErrorDialog";
 
 export default function Register() {
   const navigate = useNavigate();
-  const { register } = useContext(AuthContext);
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError("");
-
     try {
       await registerUser({ name, surname, username, email, password });
 
       navigate("/");
     } catch (err) {
-      setError(err.message);
+      setErrorMessage(err.message || "Register error");
+      setErrorDialogOpen(true);
     }
   };
 
@@ -44,7 +46,8 @@ export default function Register() {
     >
       <Box
         sx={{
-          mt: 8,
+          mb: 12,
+          p: 4,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -52,9 +55,8 @@ export default function Register() {
           maxWidth: 600,
           bgcolor: "#f5f5f5",
           color: "#3e0b00",
-          p: 4,
           borderRadius: 4,
-          mb: 15,
+          boxShadow: 20,
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>
@@ -110,11 +112,6 @@ export default function Register() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {error && (
-            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              {error}
-            </Typography>
-          )}
           <Button
             type="submit"
             variant="contained"
@@ -129,6 +126,11 @@ export default function Register() {
           </Button>
         </Box>
       </Box>
+      <ErrorDialog
+        open={errorDialogOpen}
+        onClose={() => setErrorDialogOpen(false)}
+        message={errorMessage}
+      />
     </Box>
   );
 }

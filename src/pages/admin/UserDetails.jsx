@@ -72,6 +72,10 @@ export default function UserDetails() {
     }
   };
 
+  const handleRentalClick = (movieId) => {
+    navigate(`/movies/${movieId}`);
+  };
+
   if (loading || authLoading) {
     return (
       <Box
@@ -144,7 +148,13 @@ export default function UserDetails() {
           }}
         >
           {rentals.length > 0 ? (
-            rentals.map((r) => <RentalCard key={r.id} rental={r} />)
+            rentals.map((r) => (
+              <RentalCard
+                key={r.id}
+                rental={r}
+                onClick={() => handleRentalClick(r.movieId)}
+              />
+            ))
           ) : (
             <Box
               sx={{

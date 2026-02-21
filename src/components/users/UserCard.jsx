@@ -24,8 +24,8 @@ export default function UserCard({ user, onClick }) {
         cursor: "pointer",
         transition: "transform 0.2s, box-shadow 0.2s",
         "&:hover": {
-          transform: "translateY(-5px)",
-          boxShadow: 8,
+          transform: "translateY(-2px)",
+          boxShadow: 4,
         },
       }}
     >

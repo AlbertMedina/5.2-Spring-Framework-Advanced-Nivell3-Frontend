@@ -1,11 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import MovieIcon from "@mui/icons-material/LocalMovies";
 
-export default function RentalCard({ rental }) {
+export default function RentalCard({ rental, onClick }) {
   if (!rental) return null;
 
   return (
     <Box
+      onClick={onClick}
       sx={{
         p: 2,
         bgcolor: "white",
@@ -17,6 +18,14 @@ export default function RentalCard({ rental }) {
         flexDirection: "row",
         gap: 3,
         alignItems: "center",
+        ...(onClick && {
+          cursor: "pointer",
+          transition: "transform 0.2s, box-shadow 0.2s",
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow: 4,
+          },
+        }),
       }}
     >
       <Box

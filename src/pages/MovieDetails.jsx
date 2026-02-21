@@ -335,7 +335,7 @@ export default function MovieDetails() {
           }}
         >
           {rentals.map((r) => {
-            return <RentalCard key={r.id} rental={r} />;
+            return <RentalCard key={r.id} rental={r} onClick={null} />;
           })}
         </Box>
       )}

@@ -1,8 +1,10 @@
 import { Box, Typography, Grid, IconButton, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import RateReviewIcon from "@mui/icons-material/RateReview";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import StarRatingDisplay from "../movies/StarRatingDisplay";
 import defaultPoster from "../../assets/background-movie.webp";
@@ -12,10 +14,12 @@ export default function MovieDetailsCard({
   isAdmin,
   isUser,
   hasRented,
+  isFavourite,
   onEdit,
   onDelete,
   onRentReturn,
   onReview,
+  onFavourite,
 }) {
   return (
     <Box
@@ -32,7 +36,7 @@ export default function MovieDetailsCard({
       <Box
         sx={{
           position: "absolute",
-          top: 16,
+          bottom: 16,
           right: 16,
           display: "flex",
           gap: 1,
@@ -57,7 +61,7 @@ export default function MovieDetailsCard({
           <>
             <Button
               variant="contained"
-              size="small"
+              size="medium"
               startIcon={<LocalMoviesIcon />}
               onClick={onRentReturn}
             >
@@ -65,15 +69,26 @@ export default function MovieDetailsCard({
             </Button>
 
             {hasRented && (
-              <Button
-                variant="contained"
-                size="small"
-                startIcon={<RateReviewIcon />}
+              <IconButton
                 onClick={onReview}
+                size="large"
+                sx={{ color: "#f5f5f5" }}
               >
-                Review
-              </Button>
+                <RateReviewIcon fontSize="large" />
+              </IconButton>
             )}
+
+            <IconButton
+              onClick={onFavourite}
+              size="large"
+              sx={{ color: "#f5f5f5" }}
+            >
+              {isFavourite ? (
+                <FavoriteIcon fontSize="large" />
+              ) : (
+                <FavoriteBorderIcon fontSize="large" />
+              )}
+            </IconButton>
           </>
         )}
       </Box>

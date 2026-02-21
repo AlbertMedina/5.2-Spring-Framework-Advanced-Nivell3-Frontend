@@ -11,6 +11,9 @@ import {
   getMovieReviews,
   removeReview,
   getMovieRentals,
+  addFavourite,
+  removeFavourite,
+  userHasFavouriteMovie,
 } from "../services/api";
 import AuthContext from "../services/auth.context";
 
@@ -42,6 +45,7 @@ export default function MovieDetails() {
   const [reviewToDelete, setReviewToDelete] = useState(null);
 
   const [hasRented, setHasRented] = useState(false);
+  const [isFavourite, setIsFavourite] = useState(false);
 
   const isAdmin = role === "ADMIN";
   const isUser = role === "USER";
@@ -53,8 +57,11 @@ export default function MovieDetails() {
       setMovie(data);
 
       if (isUser) {
-        const rentedResp = await userHasRentedMovie(token, movieId);
-        setHasRented(rentedResp.rented);
+        const rentedData = await userHasRentedMovie(token, movieId);
+        setHasRented(rentedData.rented);
+
+        const favouriteData = await userHasFavouriteMovie(token, movieId);
+        setIsFavourite(favouriteData.isFavourite);
       }
     } catch (err) {
       setErrorMessage(err.message || "Error fetching movie");
@@ -157,6 +164,21 @@ export default function MovieDetails() {
     await fetchMovieDetails();
   };
 
+  const handleFavouriteClick = async () => {
+    try {
+      if (isFavourite) {
+        await removeFavourite(token, movieId);
+        setIsFavourite(false);
+      } else {
+        await addFavourite(token, movieId);
+        setIsFavourite(true);
+      }
+    } catch (err) {
+      setErrorMessage(err.message || "Error processing favourite");
+      setErrorDialogOpen(true);
+    }
+  };
+
   if (loading || authLoading) {
     return (
       <Box
@@ -198,10 +220,12 @@ export default function MovieDetails() {
           isAdmin={isAdmin}
           isUser={isUser}
           hasRented={hasRented}
+          isFavourite={isFavourite}
           onEdit={() => setUpdateModalOpen(true)}
           onDelete={() => setConfirmDeleteMovieOpen(true)}
           onRentReturn={handleRentReturnClick}
           onReview={() => setReviewModalOpen(true)}
+          onFavourite={handleFavouriteClick}
         />
 
         <ConfirmDialog

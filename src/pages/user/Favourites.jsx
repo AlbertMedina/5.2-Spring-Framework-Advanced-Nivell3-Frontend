@@ -84,7 +84,7 @@ export default function Favourites() {
         {favourites.map((f) => (
           <Grid key={f.id}>
             <MovieCard
-              movie={f}
+              movie={f.movie}
               onClick={() => handleFavouriteClick(f.movie.id)}
             />
           </Grid>

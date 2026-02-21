@@ -12,7 +12,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -27,26 +27,41 @@ export default function Login() {
     }
   };
 
-  const handleRegister = () => {
+  const handleGoToRegister = () => {
     navigate("/register");
   };
 
   return (
-    <Container maxWidth="sm">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Box
         sx={{
           mt: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          width: "100%",
+          maxWidth: 600,
+          bgcolor: "#f5f5f5",
+          color: "#3e0b00",
+          p: 4,
+          borderRadius: 4,
+          mb: 15,
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>
-          Login
+          LOGIN
         </Typography>
         <Box
           component="form"
-          onSubmit={handleSubmit}
+          onSubmit={handleLogin}
           sx={{ width: "100%", mt: 1 }}
         >
           <TextField
@@ -79,19 +94,13 @@ export default function Login() {
             fullWidth
             sx={{ mt: 3 }}
           >
-            Entrar
+            Log in
           </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            sx={{ mt: 2 }}
-            onClick={handleRegister}
-          >
-            Register
+          <Button fullWidth sx={{ mt: 2 }} onClick={handleGoToRegister}>
+            <u>Don’t have an account? Sign up</u>
           </Button>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 }

@@ -15,7 +15,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -28,26 +28,41 @@ export default function Register() {
     }
   };
 
-  const handleLogin = () => {
+  const handleGoToLogin = () => {
     navigate("/login");
   };
 
   return (
-    <Container maxWidth="sm">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Box
         sx={{
           mt: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          width: "100%",
+          maxWidth: 600,
+          bgcolor: "#f5f5f5",
+          color: "#3e0b00",
+          p: 4,
+          borderRadius: 4,
+          mb: 15,
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>
-          Register
+          REGISTER
         </Typography>
         <Box
           component="form"
-          onSubmit={handleSubmit}
+          onSubmit={handleRegister}
           sx={{ width: "100%", mt: 1 }}
         >
           <TextField
@@ -107,19 +122,13 @@ export default function Register() {
             fullWidth
             sx={{ mt: 3 }}
           >
-            Register
+            Sign up
           </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            sx={{ mt: 2 }}
-            onClick={handleLogin}
-          >
-            Already registered? Click here to log in
+          <Button fullWidth sx={{ mt: 2 }} onClick={handleGoToLogin}>
+            <u>Already have an account? Log in</u>
           </Button>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 }

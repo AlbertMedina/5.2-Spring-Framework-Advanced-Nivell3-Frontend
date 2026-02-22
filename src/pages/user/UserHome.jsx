@@ -83,6 +83,7 @@ export default function UserHome() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          gap: 15,
           mt: 12,
           mb: 12,
         }}
@@ -92,7 +93,7 @@ export default function UserHome() {
           src={logo}
           alt="Afegir pel·lícula"
           sx={{
-            aspectRatio: "6 / 2",
+            aspectRatio: "7 / 2",
             width: 1200,
             objectFit: "cover",
             maxWidth: "100%",

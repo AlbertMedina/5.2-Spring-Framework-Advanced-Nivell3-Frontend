@@ -11,7 +11,7 @@ import MovieCarousel from "../../components/home/MovieCarouselButon";
 import logo from "../../assets/logo-dark.png";
 
 export default function UserHome() {
-  const { token, role, loading: authLoading } = useContext(AuthContext);
+  const { token, loading: authLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [movies, setMovies] = useState([]);
@@ -101,7 +101,9 @@ export default function UserHome() {
 
         <MovieCarousel
           movies={movies}
-          intervalMs={3000}
+          visibleCount={3}
+          movieWidth={300}
+          text={"Explore our top-rated movies"}
           onClick={handleCarouselClick}
         />
       </Box>

@@ -89,7 +89,7 @@ export default function AdminHome() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          gap: 15,
+          gap: 10,
           mt: 12,
           mb: 12,
         }}

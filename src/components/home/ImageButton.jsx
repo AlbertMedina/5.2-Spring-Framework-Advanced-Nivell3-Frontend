@@ -18,7 +18,7 @@ export default function ImageButton({
         sx={{
           position: "relative",
           height: "100%",
-          borderRadius: 3,
+          borderRadius: 4,
           overflow: "hidden",
           cursor: "pointer",
           "&:hover img": {

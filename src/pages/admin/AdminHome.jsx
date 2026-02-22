@@ -10,7 +10,7 @@ import MovieCarousel from "../../components/home/MovieCarouselButon";
 import ImageButton from "../../components/home/ImageButton";
 
 import logo from "../../assets/logo-dark.png";
-import users from "../../assets/user-button.png";
+import users from "../../assets/users-button.webp";
 
 export default function AdminHome() {
   const { token, loading: authLoading } = useContext(AuthContext);

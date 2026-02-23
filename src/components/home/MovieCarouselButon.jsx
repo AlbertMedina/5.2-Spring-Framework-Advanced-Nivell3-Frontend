@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
 
+import defaultPoster from "../../assets/background-movie-default.webp";
+
 export default function MovieCarouselButon({
   movies,
   visibleCount = 1,
@@ -74,7 +76,7 @@ export default function MovieCarouselButon({
               <Box key={movie.id} sx={{ width: movieWidth }}>
                 <Box
                   component="img"
-                  src={movie.posterUrl}
+                  src={movie.posterUrl || defaultPoster}
                   alt={movie.title}
                   sx={{
                     width: "100%",

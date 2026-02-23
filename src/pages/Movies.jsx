@@ -104,7 +104,7 @@ export default function Movies() {
 
   const handlePageChange = (newPage) => setPage(newPage);
 
-  if (loading || authLoading) {
+  if (authLoading) {
     return (
       <Box
         sx={{
@@ -197,14 +197,27 @@ export default function Movies() {
             </Grid>
           )}
 
-          {movies.map((movie) => (
-            <Grid key={movie.id}>
-              <MovieCard
-                movie={movie}
-                onClick={() => handleMovieClick(movie.id)}
-              />
-            </Grid>
-          ))}
+          {loading ? (
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                mt: 4,
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            movies.map((movie) => (
+              <Grid key={movie.id}>
+                <MovieCard
+                  movie={movie}
+                  onClick={() => handleMovieClick(movie.id)}
+                />
+              </Grid>
+            ))
+          )}
         </Grid>
       </Box>
 

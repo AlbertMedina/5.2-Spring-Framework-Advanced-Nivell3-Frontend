@@ -64,6 +64,24 @@ export async function getMovieReviews(token, movieId) {
   return await res.json();
 }
 
+export async function userHasReviewedMovie(token, movieId) {
+  const res = await fetch(`${API_URL}/me/reviews/${movieId}`, {
+    headers: authHeaders(token),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json();
+    throw new Error(err.message || "Cannot check review");
+  }
+
+  return await res.json();
+}
+
 function forceLogOut() {
   localStorage.removeItem("token");
   localStorage.removeItem("role");

@@ -7,10 +7,11 @@ import {
   removeMovie,
   rentMovie,
   returnMovie,
+  getMovieRentals,
   userHasRentedMovie,
   getMovieReviews,
   removeReview,
-  getMovieRentals,
+  userHasReviewedMovie,
   addFavourite,
   removeFavourite,
   userHasFavouriteMovie,
@@ -45,6 +46,7 @@ export default function MovieDetails() {
   const [reviewToDelete, setReviewToDelete] = useState(null);
 
   const [hasRented, setHasRented] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
 
   const isAdmin = role === "ADMIN";
@@ -59,6 +61,9 @@ export default function MovieDetails() {
       if (isUser) {
         const rentedData = await userHasRentedMovie(token, movieId);
         setHasRented(rentedData.rented);
+
+        const reviewedData = await userHasReviewedMovie(token, movieId);
+        setHasReviewed(reviewedData.rented);
 
         const favouriteData = await userHasFavouriteMovie(token, movieId);
         setIsFavourite(favouriteData.isFavourite);
@@ -220,6 +225,7 @@ export default function MovieDetails() {
           isAdmin={isAdmin}
           isUser={isUser}
           hasRented={hasRented}
+          hasReviewed={hasReviewed}
           isFavourite={isFavourite}
           onEdit={() => setUpdateModalOpen(true)}
           onDelete={() => setConfirmDeleteMovieOpen(true)}

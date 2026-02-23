@@ -69,7 +69,7 @@ export default function MovieDetailsCard({
               {hasRented ? "Return" : "Rent"}
             </Button>
 
-            {hasRented && hasReviewed && (
+            {hasRented && !hasReviewed && (
               <IconButton
                 onClick={onReview}
                 size="large"

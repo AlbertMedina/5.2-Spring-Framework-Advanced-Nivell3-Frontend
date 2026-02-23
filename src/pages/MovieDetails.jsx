@@ -63,7 +63,7 @@ export default function MovieDetails() {
         setHasRented(rentedData.rented);
 
         const reviewedData = await userHasReviewedMovie(token, movieId);
-        setHasReviewed(reviewedData.rented);
+        setHasReviewed(reviewedData.reviewed);
 
         const favouriteData = await userHasFavouriteMovie(token, movieId);
         setIsFavourite(favouriteData.isFavourite);

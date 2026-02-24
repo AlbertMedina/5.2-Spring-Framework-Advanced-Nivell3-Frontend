@@ -1,16 +1,39 @@
-# React + Vite
+# Video Paradiso
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+This project recreates the classic video rental store experience in a digital environment, allowing users to browse, rent, and rate movies. The application supports different user roles, such as regular users and administrators, each with dedicated features to interact with the movie catalog and manage the platform.
+The system focuses on providing an intuitive way to explore content while enforcing role-based access and permissions, ensuring a structured and well-managed movie rental experience.
+> This repository contains the Frontend. The Backend (API) can be found in this repository: [videostore-backend](https://github.com/AlbertMedina/5.2-Spring-Framework-Advanced-Nivell3-Backend.git)
 
-Currently, two official plugins are available:
+## Tech Stack
+A modern React application bootstrapped with Vite, focused on providing a clean and responsive UI for browsing, renting, and reviewing movies.
+- **UI & Styling:** Built with Material UI for a consistent and responsive design.
+- **State Management:** React built-in state and context for managing application data.
+- **Data Fetching:** Uses native Fetch API to communicate with the backend API.
+- **Authentication:** JWT tokens stored in localStorage and included in API requests via custom hooks.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Installation
+1. Clone repository (https://github.com/AlbertMedina/5.2-Spring-Framework-Advanced-Nivell3-Frontend.git).
+```
+git clone https://github.com/AlbertMedina/5.2-Spring-Framework-Advanced-Nivell3-Frontend.git
+```
+2. Navigate to project folder.
+```
+cd videostore
+```
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Execution
+1. Ensure the backend API is running.
+2. Install dependencies:
+```
+npm install
+```
+3. Run the development server:
+```
+npm run dev
+```
+4. Open your browser and access the application:
+```
+http://localhost:5173
+```
+> ⚠ Ensure the backend API is running at http://localhost:8080 to allow the frontend to function properly.

@@ -36,4 +36,4 @@ npm run dev
 ```
 http://localhost:5173
 ```
-> ⚠ Ensure the backend API is running at http://localhost:8080 to allow the frontend to function properly.
+> ⚠ Ensure the backend API is running at `http://localhost:8080` to allow the frontend to function properly.

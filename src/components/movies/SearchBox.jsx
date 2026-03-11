@@ -12,12 +12,14 @@ export default function SearchBox({
   const [internalValue, setInternalValue] = useState(value || "");
 
   useEffect(() => {
+    if (internalValue === value) return;
+
     const handler = setTimeout(() => {
       onChange(internalValue);
     }, debounceTime);
 
     return () => clearTimeout(handler);
-  }, [internalValue, onChange, debounceTime]);
+  }, [internalValue, value, onChange, debounceTime]);
 
   return (
     <Box

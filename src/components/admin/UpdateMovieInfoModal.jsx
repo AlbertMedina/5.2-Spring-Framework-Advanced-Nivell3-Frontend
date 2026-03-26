@@ -33,7 +33,7 @@ export default function UpdateMovieInfoModal({
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (movie) {
+    if (open && movie) {
       setUpdatedMovie({
         title: movie.title || "",
         year: movie.year || "",
@@ -43,7 +43,7 @@ export default function UpdateMovieInfoModal({
         synopsis: movie.synopsis || "",
       });
     }
-  }, [movie]);
+  }, [movie, open]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -73,6 +73,15 @@ export default function UpdateMovieInfoModal({
       setLoading(false);
     }
   };
+
+  const hasChanges =
+    movie &&
+    (updatedMovie.title !== (movie.title || "") ||
+      updatedMovie.year.toString() !== (movie.year?.toString() || "") ||
+      updatedMovie.genre !== (movie.genre || "") ||
+      updatedMovie.duration.toString() !== (movie.duration?.toString() || "") ||
+      updatedMovie.director !== (movie.director || "") ||
+      updatedMovie.synopsis !== (movie.synopsis || ""));
 
   return (
     <>
@@ -170,7 +179,7 @@ export default function UpdateMovieInfoModal({
           <Button
             onClick={handleSave}
             variant="contained"
-            disabled={loading}
+            disabled={loading || !hasChanges}
             sx={{
               bgcolor: "#3e0b00",
               color: "#f5f5f5",

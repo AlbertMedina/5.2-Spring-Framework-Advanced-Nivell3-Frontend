@@ -6,7 +6,9 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
+import ImageButton from "../../components/home/ImageButton";
 import StarRatingDisplay from "../movies/StarRatingDisplay";
+
 import defaultPoster from "../../assets/background-movie-default.webp";
 
 export default function MovieDetailsCard({
@@ -16,7 +18,8 @@ export default function MovieDetailsCard({
   hasRented,
   hasReviewed,
   isFavourite,
-  onEdit,
+  onEditInfo,
+  onEditPoster,
   onDelete,
   onRentReturn,
   onReview,
@@ -45,7 +48,11 @@ export default function MovieDetailsCard({
       >
         {isAdmin && (
           <>
-            <IconButton onClick={onEdit} size="large" sx={{ color: "#f5f5f5" }}>
+            <IconButton
+              onClick={onEditInfo}
+              size="large"
+              sx={{ color: "#f5f5f5" }}
+            >
               <EditIcon fontSize="large" />
             </IconButton>
             <IconButton
@@ -106,21 +113,31 @@ export default function MovieDetailsCard({
               maxWidth: 300,
             }}
           >
-            <Box
-              component="img"
-              src={movie.posterUrl || defaultPoster}
-              alt={movie.title}
-              sx={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center",
-                display: "block",
-              }}
-              onError={(e) => {
-                e.target.src = defaultPoster;
-              }}
-            />
+            {isAdmin ? (
+              <ImageButton
+                width={"100%"}
+                aspectRatio={"2 / 3"}
+                image={movie.posterUrl || defaultPoster}
+                text={<EditIcon fontSize="x-large" />}
+                onClick={onEditPoster}
+              />
+            ) : (
+              <Box
+                component="img"
+                src={movie.posterUrl || defaultPoster}
+                alt={movie.title}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  display: "block",
+                }}
+                onError={(e) => {
+                  e.target.src = defaultPoster;
+                }}
+              />
+            )}
           </Box>
         </Grid>
 

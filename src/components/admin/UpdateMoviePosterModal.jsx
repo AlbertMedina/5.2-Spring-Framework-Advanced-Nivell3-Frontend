@@ -1,41 +1,32 @@
 import { useState, useEffect } from "react";
+
 import {
   Dialog,
   DialogContent,
   DialogActions,
-  TextField,
-  Button,
   Box,
+  Button,
   IconButton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { addMovie } from "../../services/api";
+import { updateMoviePoster } from "../../services/api";
 
 import ErrorDialog from "../shared/ErrorDialog";
 
-export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
-  const [newMovie, setNewMovie] = useState({
-    title: "",
-    year: "",
-    genre: "",
-    duration: "",
-    director: "",
-    synopsis: "",
-    copies: "",
-  });
-
+export default function UpdateMoviePosterModal({
+  open,
+  onClose,
+  token,
+  movie,
+  onMoviePosterUpdated,
+}) {
   const [posterFile, setPosterFile] = useState(null);
   const [posterPreview, setPosterPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewMovie((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -56,54 +47,38 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
     };
   }, [posterPreview]);
 
+  useEffect(() => {
+    if (open && movie) {
+      setPosterPreview(movie.posterUrl || null);
+      setPosterFile(null);
+    }
+  }, [movie, open]);
+
   const handleSave = async () => {
     try {
       setLoading(true);
 
-      const payload = {
-        title: newMovie.title,
-        year: parseInt(newMovie.year, 10),
-        genre: newMovie.genre,
-        duration: parseInt(newMovie.duration, 10),
-        director: newMovie.director,
-        synopsis: newMovie.synopsis,
-        numberOfCopies: parseInt(newMovie.copies, 10),
-      };
+      const updated = await updateMoviePoster(token, movie.id, posterFile);
 
-      await addMovie(token, payload, posterFile);
-
-      setNewMovie({
-        title: "",
-        year: "",
-        genre: "",
-        duration: "",
-        director: "",
-        synopsis: "",
-        copies: "",
-      });
-      setPosterFile(null);
-      setPosterPreview(null);
-
-      onMovieAdded();
+      onMoviePosterUpdated(updated);
       onClose();
     } catch (err) {
-      const firstError = Array.isArray(err.errors)
-        ? err.errors[0].message
-        : err.message;
-      setErrorMessage(firstError || "Error adding movie");
+      setErrorMessage(err.message || "Error updating movie");
       setErrorDialogOpen(true);
     } finally {
       setLoading(false);
     }
   };
 
+  const hasChanges =
+    posterFile !== null || (movie?.posterUrl && !posterPreview);
+
   return (
     <>
       <Dialog
         open={open}
         onClose={onClose}
-        maxWidth="md"
-        fullWidth
+        maxWidth="sm"
         slotProps={{
           backdrop: {
             sx: {
@@ -115,10 +90,9 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
         <DialogContent
           sx={{
             display: "flex",
-            flexDirection: "row",
-            gap: 3,
+            justifyContent: "center",
             pt: 4,
-            pb: 2,
+            pb: 0,
             pr: 4,
             pl: 4,
           }}
@@ -190,62 +164,10 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
                     "&:hover": { backgroundColor: "rgba(0,0,0,0.8)" },
                   }}
                 >
-                  <DeleteIcon />
+                  <DeleteIcon fontSize="large" />
                 </IconButton>
               </Box>
             )}
-          </Box>
-
-          <Box
-            sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}
-          >
-            <TextField
-              label="Title"
-              name="title"
-              value={newMovie.title}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Year"
-              name="year"
-              type="number"
-              value={newMovie.year}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Genre"
-              name="genre"
-              value={newMovie.genre}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Duration"
-              name="duration"
-              type="number"
-              value={newMovie.duration}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Director"
-              name="director"
-              value={newMovie.director}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Synopsis"
-              name="synopsis"
-              value={newMovie.synopsis}
-              onChange={handleChange}
-              multiline
-              rows={3}
-            />
-            <TextField
-              label="Number of Copies"
-              name="copies"
-              type="number"
-              value={newMovie.copies}
-              onChange={handleChange}
-            />
           </Box>
         </DialogContent>
 
@@ -277,7 +199,7 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
           <Button
             onClick={handleSave}
             variant="contained"
-            disabled={loading}
+            disabled={loading || !hasChanges}
             sx={{
               bgcolor: "#3e0b00",
               color: "#f5f5f5",

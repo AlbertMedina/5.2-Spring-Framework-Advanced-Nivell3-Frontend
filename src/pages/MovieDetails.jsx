@@ -18,7 +18,8 @@ import {
 } from "../services/api";
 import AuthContext from "../services/auth.context";
 
-import UpdateMovieModal from "../components/admin/UpdateMovieModal";
+import UpdateMovieInfoModal from "../components/admin/UpdateMovieInfoModal";
+import UpdateMoviePosterModal from "../components/admin/UpdateMoviePosterModal";
 import AddReviewModal from "../components/movies/AddReviewModal";
 import MovieDetailsCard from "../components/movies/MovieDetailsCard";
 import ReviewCard from "../components/movies/ReviewCard";
@@ -39,7 +40,8 @@ export default function MovieDetails() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const [confirmDeleteMovieOpen, setConfirmDeleteMovieOpen] = useState(false);
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [updateInfoModalOpen, setUpdateInfoModalOpen] = useState(false);
+  const [updatePosterModalOpen, setUpdatePosterModalOpen] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [rentConfirmOpen, setRentConfirmOpen] = useState(false);
   const [confirmDeleteReviewOpen, setConfirmDeleteReviewOpen] = useState(false);
@@ -127,9 +129,14 @@ export default function MovieDetails() {
     }
   };
 
-  const handleMovieUpdated = (updatedMovie) => {
+  const handleMovieInfoUpdated = (updatedMovie) => {
     setMovie(updatedMovie);
-    setUpdateModalOpen(false);
+    setUpdateInfoModalOpen(false);
+  };
+
+  const handleMoviePosterUpdated = (updatedMovie) => {
+    setMovie(updatedMovie);
+    setUpdatePosterModalOpen(false);
   };
 
   const handleRentReturnClick = () => {
@@ -227,7 +234,8 @@ export default function MovieDetails() {
           hasRented={hasRented}
           hasReviewed={hasReviewed}
           isFavourite={isFavourite}
-          onEdit={() => setUpdateModalOpen(true)}
+          onEditInfo={() => setUpdateInfoModalOpen(true)}
+          onEditPoster={() => setUpdatePosterModalOpen(true)}
           onDelete={() => setConfirmDeleteMovieOpen(true)}
           onRentReturn={handleRentReturnClick}
           onReview={() => setReviewModalOpen(true)}
@@ -271,12 +279,20 @@ export default function MovieDetails() {
           }}
         />
 
-        <UpdateMovieModal
-          open={updateModalOpen}
-          onClose={() => setUpdateModalOpen(false)}
+        <UpdateMovieInfoModal
+          open={updateInfoModalOpen}
+          onClose={() => setUpdateInfoModalOpen(false)}
           token={token}
           movie={movie}
-          onMovieUpdated={handleMovieUpdated}
+          onMovieInfoUpdated={handleMovieInfoUpdated}
+        />
+
+        <UpdateMoviePosterModal
+          open={updatePosterModalOpen}
+          onClose={() => setUpdatePosterModalOpen(false)}
+          token={token}
+          movie={movie}
+          onMoviePosterUpdated={handleMoviePosterUpdated}
         />
 
         {hasRented && (

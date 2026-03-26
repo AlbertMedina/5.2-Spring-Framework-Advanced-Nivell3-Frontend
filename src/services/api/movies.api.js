@@ -59,11 +59,11 @@ export async function updateMovieInfo(token, movieId, updateData) {
   return await res.json();
 }
 
-export async function updateMoviePoster(token, movieId, poster) {
+export async function updateMoviePoster(token, movieId, posterFile) {
   const formData = new FormData();
 
-  if (poster) {
-    formData.append("poster", poster);
+  if (posterFile) {
+    formData.append("poster", posterFile);
   }
 
   const res = await fetch(`${API_URL}/movies/${movieId}/poster`, {

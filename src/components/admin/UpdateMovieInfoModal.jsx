@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
@@ -12,12 +11,12 @@ import {
 import { updateMovieInfo } from "../../services/api";
 import ErrorDialog from "../shared/ErrorDialog";
 
-export default function UpdateMovieModal({
+export default function UpdateMovieInfoModal({
   open,
   onClose,
   token,
   movie,
-  onMovieUpdated,
+  onMovieInfoUpdated,
 }) {
   const [updatedMovie, setUpdatedMovie] = useState({
     title: "",
@@ -65,7 +64,7 @@ export default function UpdateMovieModal({
 
       const updated = await updateMovieInfo(token, movie.id, payload);
 
-      onMovieUpdated(updated);
+      onMovieInfoUpdated(updated);
       onClose();
     } catch (err) {
       setErrorMessage(err.message || "Error updating movie");

@@ -36,7 +36,7 @@ export async function addMovie(token, movieData, posterFile) {
   return await res.json();
 }
 
-export async function updateMovie(token, movieId, updateData) {
+export async function updateMovieInfo(token, movieId, updateData) {
   const res = await fetch(`${API_URL}/movies/${movieId}`, {
     method: "PUT",
     headers: {
@@ -54,6 +54,34 @@ export async function updateMovie(token, movieId, updateData) {
 
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || "Cannot update movie");
+  }
+
+  return await res.json();
+}
+
+export async function updateMoviePoster(token, movieId, poster) {
+  const formData = new FormData();
+
+  if (poster) {
+    formData.append("poster", poster);
+  }
+
+  const res = await fetch(`${API_URL}/movies/${movieId}/poster`, {
+    method: "PUT",
+    headers: {
+      ...authHeaders(token),
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      forceLogOut();
+      return;
+    }
+
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Cannot update movie poster");
   }
 
   return await res.json();

@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 
-import { updateMovie } from "../../services/api";
+import { updateMovieInfo } from "../../services/api";
 import ErrorDialog from "../shared/ErrorDialog";
 
 export default function UpdateMovieModal({
@@ -63,7 +63,7 @@ export default function UpdateMovieModal({
         synopsis: updatedMovie.synopsis,
       };
 
-      const updated = await updateMovie(token, movie.id, payload);
+      const updated = await updateMovieInfo(token, movie.id, payload);
 
       onMovieUpdated(updated);
       onClose();

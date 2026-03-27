@@ -83,7 +83,6 @@ export default function Me() {
   return (
     <Box
       sx={{
-        mt: 12,
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",

@@ -1,6 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { lazy, Suspense, useContext } from "react";
 
+import { Box } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
@@ -47,32 +48,38 @@ function AppRoutes() {
 
   if (loading) return <div>Loading...</div>;
 
-  const defaultStyle = {
-    backgroundImage: `url(${DefaultBackgroundImage})`,
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center center",
-    minHeight: "100vh",
-    overflow: "auto",
-  };
-
-  const authStyle = {
+  const authBackground = {
     backgroundImage: `url(${AuthBackgroundImage})`,
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
     backgroundPosition: "center top",
-    minHeight: "100vh",
-    overflow: "auto",
   };
 
-  const style = role ? defaultStyle : authStyle;
+  const defaultBackground = {
+    backgroundImage: `url(${DefaultBackgroundImage})`,
+    backgroundPosition: "center center",
+  };
 
   return (
-    <div style={style}>
+    <Box
+      component="main"
+      sx={{
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+
+        ...(role ? defaultBackground : authBackground),
+
+        pt: role ? 12 : 0,
+        pb: 12,
+
+        width: "100%",
+      }}
+    >
       <Suspense fallback={<div>Loading...</div>}>
         {role ? role === "ADMIN" ? <AdminApp /> : <UserApp /> : <AuthApp />}
       </Suspense>
-    </div>
+    </Box>
   );
 }
 

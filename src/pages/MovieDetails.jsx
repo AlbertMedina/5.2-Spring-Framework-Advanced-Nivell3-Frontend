@@ -212,7 +212,6 @@ export default function MovieDetails() {
   return (
     <Box
       sx={{
-        mt: 12,
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",

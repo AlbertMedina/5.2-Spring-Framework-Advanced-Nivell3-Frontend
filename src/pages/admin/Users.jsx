@@ -68,7 +68,6 @@ export default function Users() {
   return (
     <Box
       sx={{
-        mt: 12,
         display: "flex",
         justifyContent: "center",
       }}

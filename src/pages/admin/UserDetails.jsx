@@ -97,7 +97,6 @@ export default function UserDetails() {
   return (
     <Box
       sx={{
-        mt: 12,
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",

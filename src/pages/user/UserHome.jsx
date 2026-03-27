@@ -84,8 +84,6 @@ export default function UserHome() {
           justifyContent: "center",
           alignItems: "center",
           gap: 10,
-          mt: 12,
-          mb: 12,
         }}
       >
         <Box

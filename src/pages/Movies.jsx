@@ -127,7 +127,6 @@ export default function Movies() {
       sx={{
         maxWidth: 1800,
         mx: "auto",
-        mt: 12,
         textAlign: "center",
         display: "flex",
         flexDirection: "column",

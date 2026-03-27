@@ -67,7 +67,6 @@ export default function Favourites() {
       sx={{
         maxWidth: 1800,
         mx: "auto",
-        mt: 12,
         textAlign: "center",
         display: "flex",
         flexDirection: "column",
@@ -99,7 +98,6 @@ export default function Favourites() {
         alignItems: "center",
         gap: 5,
         height: 50,
-        mt: 12,
       }}
     >
       <Typography sx={{ color: "#3e0b00", fontWeight: "bold" }}>

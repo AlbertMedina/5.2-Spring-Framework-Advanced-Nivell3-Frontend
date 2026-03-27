@@ -95,7 +95,7 @@ export default function AdminHome() {
         <Box
           component="img"
           src={logo}
-          alt="Afegir pel·lícula"
+          alt="Video Paradiso Logo"
           sx={{
             aspectRatio: "7 / 2",
             width: 1200,

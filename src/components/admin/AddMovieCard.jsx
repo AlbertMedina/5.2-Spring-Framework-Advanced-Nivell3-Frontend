@@ -30,7 +30,7 @@ export default function AddMovieCard({ onClick }) {
         <Box
           component="img"
           src={backgroundImage}
-          alt="Afegir pel·lícula"
+          alt="New Movie"
           sx={{
             width: "100%",
             height: "100%",

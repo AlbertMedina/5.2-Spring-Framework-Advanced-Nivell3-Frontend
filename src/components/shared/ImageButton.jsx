@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
+import ImageFallback from "./ImageFallback";
 
 export default function ImageButton({
   width,
@@ -7,6 +9,12 @@ export default function ImageButton({
   text,
   onClick,
 }) {
+  const [hasPosterError, setHasPosterError] = useState(false);
+
+  useEffect(() => {
+    setHasPosterError(false);
+  }, [image]);
+
   return (
     <Box
       sx={{
@@ -21,9 +29,8 @@ export default function ImageButton({
           borderRadius: 4,
           overflow: "hidden",
           cursor: "pointer",
-          "&:hover img": {
+          "&:hover .content-wrapper": {
             filter: "brightness(30%)",
-            transition: "300ms ease",
           },
           "&:hover .overlay": {
             opacity: 1,
@@ -31,16 +38,31 @@ export default function ImageButton({
         }}
         onClick={onClick}
       >
-        <img
-          src={image}
-          alt={text}
-          style={{
-            width: "100%",
+        <Box
+          className="content-wrapper"
+          sx={{
             height: "100%",
-            objectFit: "cover",
-            transition: "0.3s",
+            width: "100%",
+            transition: "300ms ease",
           }}
-        />
+        >
+          {hasPosterError ? (
+            <ImageFallback />
+          ) : (
+            <Box
+              component="img"
+              src={image}
+              alt=""
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              onError={() => setHasPosterError(true)}
+            />
+          )}
+        </Box>
+
         <Box
           className="overlay"
           sx={{
@@ -59,6 +81,7 @@ export default function ImageButton({
             fontWeight: "bold",
             opacity: 0,
             transition: "0.3s",
+            pointerEvents: "none",
           }}
         >
           {text}

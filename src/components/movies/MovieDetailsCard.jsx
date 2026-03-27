@@ -9,7 +9,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import ImageFallback from "../../components/shared/ImageFallback";
-import ImageButton from "../../components/home/ImageButton";
+import ImageButton from "../shared/ImageButton";
 import StarRatingDisplay from "../movies/StarRatingDisplay";
 
 import defaultPoster from "../../assets/background-movie-default.webp";

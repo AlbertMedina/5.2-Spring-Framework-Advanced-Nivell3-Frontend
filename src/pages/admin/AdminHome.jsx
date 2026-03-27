@@ -7,7 +7,7 @@ import { getAllMovies } from "../../services/api";
 import AuthContext from "../../services/auth.context";
 
 import MovieCarousel from "../../components/home/MovieCarouselButon";
-import ImageButton from "../../components/home/ImageButton";
+import ImageButton from "../../components/shared/ImageButton";
 
 import logo from "../../assets/logo-dark.png";
 import users from "../../assets/users-button.webp";

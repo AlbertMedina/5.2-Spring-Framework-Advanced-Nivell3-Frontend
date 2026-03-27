@@ -1,7 +1,43 @@
 import { useEffect, useMemo, useState } from "react";
+
 import { Box } from "@mui/material";
 
+import ImageFallback from "../shared/ImageFallback";
+
 import defaultPoster from "../../assets/background-movie-default.webp";
+
+function CarouselPoster({ movie, movieWidth }) {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [movie, movie.posterUrl]);
+
+  if (hasError) {
+    return (
+      <Box sx={{ width: movieWidth, aspectRatio: "2 / 3" }}>
+        <ImageFallback />
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      component="img"
+      src={movie.posterUrl || defaultPoster}
+      alt={movie.title}
+      sx={{
+        width: movieWidth,
+        height: "100%",
+        display: "block",
+        aspectRatio: "2 / 3",
+        objectFit: "cover",
+        borderRadius: 4,
+      }}
+      onError={() => setHasError(true)}
+    />
+  );
+}
 
 export default function MovieCarouselButon({
   movies,
@@ -46,6 +82,7 @@ export default function MovieCarouselButon({
         overflow: "hidden",
         position: "relative",
         cursor: "pointer",
+        borderRadius: 4,
         "&:hover .carousel-overlay": {
           opacity: 1,
         },
@@ -74,18 +111,7 @@ export default function MovieCarouselButon({
           >
             {page.map((movie) => (
               <Box key={movie.id} sx={{ width: movieWidth }}>
-                <Box
-                  component="img"
-                  src={movie.posterUrl || defaultPoster}
-                  alt={movie.title}
-                  sx={{
-                    width: "100%",
-                    display: "block",
-                    aspectRatio: "2 / 3",
-                    objectFit: "cover",
-                    borderRadius: 4,
-                  }}
-                />
+                <CarouselPoster movie={movie} movieWidth={movieWidth} />
               </Box>
             ))}
           </Box>

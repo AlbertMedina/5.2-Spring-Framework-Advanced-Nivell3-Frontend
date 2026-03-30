@@ -36,7 +36,8 @@ export default function Login() {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        flexGrow: 1,
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -45,7 +46,6 @@ export default function Login() {
     >
       <Box
         sx={{
-          mb: 12,
           p: 4,
           display: "flex",
           flexDirection: "column",
@@ -64,11 +64,16 @@ export default function Login() {
         <Box
           component="form"
           onSubmit={handleLogin}
-          sx={{ width: "100%", mt: 1 }}
+          sx={{
+            width: "100%",
+            "& .MuiInputBase-input": { fontSize: "16px" },
+            "& .MuiInputLabel-root": { fontSize: "16px" },
+          }}
         >
           <TextField
             label="Username or Email"
             type="text"
+            size="small"
             fullWidth
             margin="normal"
             required
@@ -78,6 +83,7 @@ export default function Login() {
           <TextField
             label="Password"
             type="password"
+            size="small"
             fullWidth
             margin="normal"
             required
@@ -98,7 +104,7 @@ export default function Login() {
           >
             Log in
           </Button>
-          <Button fullWidth sx={{ mt: 2 }} onClick={handleGoToRegister}>
+          <Button fullWidth sx={{ mt: 1 }} onClick={handleGoToRegister}>
             <u>Don’t have an account? Sign up</u>
           </Button>
         </Box>

@@ -37,7 +37,8 @@ export default function Register() {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        flexGrow: 1,
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -46,7 +47,6 @@ export default function Register() {
     >
       <Box
         sx={{
-          mb: 12,
           p: 4,
           display: "flex",
           flexDirection: "column",
@@ -65,11 +65,16 @@ export default function Register() {
         <Box
           component="form"
           onSubmit={handleRegister}
-          sx={{ width: "100%", mt: 1 }}
+          sx={{
+            width: "100%",
+            "& .MuiInputBase-input": { fontSize: "16px" },
+            "& .MuiInputLabel-root": { fontSize: "16px" },
+          }}
         >
           <TextField
             label="Name"
             type="text"
+            size="small"
             fullWidth
             margin="normal"
             required
@@ -79,6 +84,7 @@ export default function Register() {
           <TextField
             label="Surname"
             type="text"
+            size="small"
             fullWidth
             margin="normal"
             required
@@ -88,6 +94,7 @@ export default function Register() {
           <TextField
             label="Username"
             type="text"
+            size="small"
             fullWidth
             margin="normal"
             required
@@ -97,6 +104,7 @@ export default function Register() {
           <TextField
             label="Email"
             type="email"
+            size="small"
             fullWidth
             margin="normal"
             required
@@ -106,6 +114,7 @@ export default function Register() {
           <TextField
             label="Password"
             type="password"
+            size="small"
             fullWidth
             margin="normal"
             required
@@ -121,7 +130,7 @@ export default function Register() {
           >
             Sign up
           </Button>
-          <Button fullWidth sx={{ mt: 2 }} onClick={handleGoToLogin}>
+          <Button fullWidth sx={{ mt: 1 }} onClick={handleGoToLogin}>
             <u>Already have an account? Log in</u>
           </Button>
         </Box>

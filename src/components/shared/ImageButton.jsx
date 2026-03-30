@@ -6,7 +6,8 @@ export default function ImageButton({
   width,
   aspectRatio,
   image,
-  text,
+  label,
+  fontSize = 24,
   onClick,
 }) {
   const [hasPosterError, setHasPosterError] = useState(false);
@@ -18,8 +19,8 @@ export default function ImageButton({
   return (
     <Box
       sx={{
-        width: width,
-        aspectRatio: aspectRatio,
+        width,
+        aspectRatio,
       }}
     >
       <Box
@@ -62,30 +63,31 @@ export default function ImageButton({
             />
           )}
         </Box>
-
-        <Box
-          className="overlay"
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            fontSize: 48,
-            textAlign: "center",
-            textShadow: "2px 4px 4px rgba(0,0,0,0.7)",
-            fontWeight: "bold",
-            opacity: 0,
-            transition: "0.3s",
-            pointerEvents: "none",
-          }}
-        >
-          {text}
-        </Box>
+        {label && (
+          <Box
+            className="overlay"
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#fff",
+              fontSize,
+              textAlign: "center",
+              textShadow: "2px 4px 4px rgba(0,0,0,0.7)",
+              fontWeight: "bold",
+              opacity: 0,
+              transition: "0.3s",
+              pointerEvents: "none",
+            }}
+          >
+            {label}
+          </Box>
+        )}
       </Box>
     </Box>
   );

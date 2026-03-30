@@ -123,7 +123,7 @@ export default function AdminHome() {
           <MovieCarousel
             movies={movies}
             movieWidth={230}
-            text={"Manage movies"}
+            label={"Manage movies"}
             onClick={handleMoviesCarouselClick}
           />
 
@@ -131,7 +131,7 @@ export default function AdminHome() {
             width={230}
             aspectRatio={"2 / 3"}
             image={users}
-            text={"Manage users"}
+            label={"Manage users"}
             onClick={handleUsersButtonClick}
           />
         </Box>

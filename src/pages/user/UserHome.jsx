@@ -110,7 +110,8 @@ export default function UserHome() {
           movies={movies}
           visibleCount={3}
           movieWidth={230}
-          text={"Explore our top-rated movies"}
+          label={"Explore our top-rated movies"}
+          fontSize={36}
           onClick={handleCarouselClick}
         />
       </Box>

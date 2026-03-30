@@ -45,7 +45,8 @@ export default function MovieCarouselButton({
   intervalMs = 3000,
   movieWidth = 300,
   gap = 16,
-  text,
+  label,
+  fontSize = 24,
   onClick,
 }) {
   const [index, setIndex] = useState(0);
@@ -118,7 +119,7 @@ export default function MovieCarouselButton({
         ))}
       </Box>
 
-      {text && (
+      {label && (
         <Box
           className="carousel-overlay"
           sx={{
@@ -135,12 +136,12 @@ export default function MovieCarouselButton({
             opacity: 0,
             transition: "0.3s",
             pointerEvents: "none",
-            fontSize: 48,
+            fontSize,
             textAlign: "center",
             textShadow: "2px 4px 4px rgba(0,0,0,0.7)",
           }}
         >
-          {text}
+          {label}
         </Box>
       )}
     </Box>

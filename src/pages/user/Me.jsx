@@ -6,7 +6,7 @@ import { getMe, getMyRentals } from "../../services/api";
 import AuthContext from "../../services/auth.context";
 
 import UserDetailsCard from "../../components/users/UserDetailsCard";
-import RentalCard from "../../components/shared/RentalCard";
+import RentalCard from "../../components/rentals/RentalCard";
 import ErrorDialog from "../../components/shared/ErrorDialog";
 
 export default function Me() {

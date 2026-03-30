@@ -23,7 +23,7 @@ import UpdateMoviePosterModal from "../components/admin/UpdateMoviePosterModal";
 import AddReviewModal from "../components/movies/AddReviewModal";
 import MovieDetailsCard from "../components/movies/MovieDetailsCard";
 import ReviewCard from "../components/movies/ReviewCard";
-import RentalCard from "../components/shared/RentalCard";
+import RentalCard from "../components/rentals/RentalCard";
 import ConfirmDialog from "../components/shared/ConfirmDialog";
 import ErrorDialog from "../components/shared/ErrorDialog";
 

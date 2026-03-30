@@ -17,10 +17,10 @@ import AuthContext from "../services/auth.context";
 import { capitalizeWords } from "../utils/stringUtils";
 
 import MovieCard from "../components/movies/MovieCard";
-import Selector from "../components/movies/Selector.jsx";
-import SearchBox from "../components/movies/SearchBox";
-import SortSelector from "../components/movies/SortSelector.jsx";
-import LabelCheckbox from "../components/movies/LabelCheckbox.jsx";
+import Selector from "../components/shared/Selector.jsx";
+import SearchBox from "../components/shared/SearchBox.jsx";
+import SortSelector from "../components/shared/SortSelector.jsx";
+import LabelCheckbox from "../components/shared/LabelCheckbox.jsx";
 import AddMovieCard from "../components/admin/AddMovieCard";
 import AddMovieModal from "../components/admin/AddMovieModal";
 import ErrorDialog from "../components/shared/ErrorDialog";

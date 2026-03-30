@@ -6,7 +6,7 @@ import { getUser, removeUser, getUserRentals } from "../../services/api";
 import AuthContext from "../../services/auth.context";
 
 import UserDetailsCard from "../../components/users/UserDetailsCard";
-import RentalCard from "../../components/shared/RentalCard";
+import RentalCard from "../../components/rentals/RentalCard";
 import ConfirmDialog from "../../components/shared/ConfirmDialog";
 import ErrorDialog from "../../components/shared/ErrorDialog";
 

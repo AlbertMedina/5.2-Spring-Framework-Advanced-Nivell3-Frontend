@@ -59,17 +59,17 @@ export default function MovieDetailsCard({
           <>
             <IconButton
               onClick={onEditInfo}
-              size="large"
+              size="small"
               sx={{ color: "#f5f5f5" }}
             >
-              <EditIcon fontSize="large" />
+              <EditIcon fontSize="medium" />
             </IconButton>
             <IconButton
               onClick={onDelete}
-              size="large"
+              size="small"
               sx={{ color: "#f5f5f5" }}
             >
-              <DeleteIcon fontSize="large" />
+              <DeleteIcon fontSize="medium" />
             </IconButton>
           </>
         )}
@@ -78,7 +78,7 @@ export default function MovieDetailsCard({
           <>
             <Button
               variant="contained"
-              size="medium"
+              size="small"
               startIcon={<LocalMoviesIcon />}
               onClick={onRentReturn}
             >
@@ -88,22 +88,22 @@ export default function MovieDetailsCard({
             {hasRented && !hasReviewed && (
               <IconButton
                 onClick={onReview}
-                size="large"
+                size="small"
                 sx={{ color: "#f5f5f5" }}
               >
-                <RateReviewIcon fontSize="large" />
+                <RateReviewIcon fontSize="medium" />
               </IconButton>
             )}
 
             <IconButton
               onClick={onFavourite}
-              size="large"
+              size="small"
               sx={{ color: "#f5f5f5" }}
             >
               {isFavourite ? (
-                <FavoriteIcon fontSize="large" />
+                <FavoriteIcon fontSize="medium" />
               ) : (
-                <FavoriteBorderIcon fontSize="large" />
+                <FavoriteBorderIcon fontSize="medium" />
               )}
             </IconButton>
           </>
@@ -160,6 +160,7 @@ export default function MovieDetailsCard({
             }}
           >
             <Typography
+              fontSize={32}
               variant="h4"
               gutterBottom
               sx={{ wordBreak: "break-word" }}
@@ -167,29 +168,29 @@ export default function MovieDetailsCard({
               {movie.title}
             </Typography>
 
-            <Typography sx={{ wordBreak: "break-word" }}>
+            <Typography sx={{ fontSize: 18, wordBreak: "break-word" }}>
               <strong>Genre:</strong> {movie.genre}
             </Typography>
-            <Typography sx={{ wordBreak: "break-word" }}>
+            <Typography sx={{ fontSize: 18, wordBreak: "break-word" }}>
               <strong>Year:</strong> {movie.year}
             </Typography>
-            <Typography sx={{ wordBreak: "break-word" }}>
+            <Typography sx={{ fontSize: 18, wordBreak: "break-word" }}>
               <strong>Duration:</strong> {movie.duration} min
             </Typography>
-            <Typography sx={{ wordBreak: "break-word" }}>
+            <Typography sx={{ fontSize: 18, wordBreak: "break-word" }}>
               <strong>Director:</strong> {movie.director}
             </Typography>
 
-            <Typography sx={{ mt: 1 }}>
+            <Typography sx={{ fontSize: 18, mt: 1 }}>
               <strong>Synopsis:</strong>
             </Typography>
-            <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
+            <Typography sx={{ fontSize: 15, wordBreak: "break-word" }}>
               "{movie.synopsis}"
             </Typography>
 
             {movie.rating && (
               <Box sx={{ mt: 2 }}>
-                <Box>
+                <Box sx={{ fontSize: 18 }}>
                   <strong>Rating:</strong>
                 </Box>
                 <Box
@@ -203,8 +204,11 @@ export default function MovieDetailsCard({
                   <StarRatingDisplay
                     rating={movie.rating.average}
                     color="f5f5f5"
+                    fontSize={18}
                   />
-                  <Box>({movie.rating.count} reviews)</Box>
+                  <Box sx={{ fontSize: 18 }}>
+                    ({movie.rating.count} reviews)
+                  </Box>
                 </Box>
               </Box>
             )}

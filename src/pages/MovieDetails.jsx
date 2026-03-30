@@ -213,6 +213,8 @@ export default function MovieDetails() {
   return (
     <Box
       sx={{
+        maxWidth: "90%",
+        mx: "auto",
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",
@@ -362,7 +364,12 @@ export default function MovieDetails() {
             ))
           ) : (
             <Typography
-              sx={{ color: "#f5f5f5", fontWeight: "bold", textAlign: "center" }}
+              sx={{
+                fontSize: 16,
+                color: "#f5f5f5",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
             >
               No active rentals for this movie
             </Typography>

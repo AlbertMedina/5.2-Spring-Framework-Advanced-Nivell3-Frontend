@@ -11,7 +11,7 @@ export default function ReviewCard({
   return (
     <Box
       sx={{
-        p: 2,
+        p: 1.5,
         bgcolor: "white",
         borderRadius: 2,
         display: "flex",
@@ -35,9 +35,9 @@ export default function ReviewCard({
         <Avatar
           alt={review.username}
           src={userAvatar}
-          sx={{ width: 56, height: 56 }}
+          sx={{ width: 45, height: 45 }}
         />
-        <Typography variant="caption" align="center">
+        <Typography sx={{ fontSize: 12 }} align="center">
           {review.username}
         </Typography>
       </Box>
@@ -50,8 +50,8 @@ export default function ReviewCard({
           mt: 1.4,
         }}
       >
-        <StarRatingDisplay rating={review.rating} />
-        <Typography variant="body2">"{review.comment}"</Typography>
+        <StarRatingDisplay rating={review.rating} fontSize={16} />
+        <Typography sx={{ fontSize: 14 }}>"{review.comment}"</Typography>
       </Box>
 
       {showDeleteButton && (

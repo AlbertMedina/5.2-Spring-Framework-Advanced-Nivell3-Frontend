@@ -8,7 +8,7 @@ export default function RentalCard({ rental, onClick }) {
     <Box
       onClick={onClick}
       sx={{
-        p: 2,
+        p: 1.5,
         bgcolor: "white",
         borderRadius: 2,
         boxShadow: 1,
@@ -36,19 +36,19 @@ export default function RentalCard({ rental, onClick }) {
           minWidth: 40,
         }}
       >
-        <MovieIcon sx={{ fontSize: 60 }} />
+        <MovieIcon sx={{ fontSize: 50 }} />
       </Box>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-        <Typography variant="subtitle1" fontWeight="bold">
+        <Typography fontWeight="bold" sx={{ fontSize: 16 }}>
           {rental.title}
         </Typography>
 
-        <Typography variant="subtitle2" color="text.secondary">
+        <Typography color="text.secondary" sx={{ fontSize: 14 }}>
           Rented by: {rental.username}
         </Typography>
 
-        <Typography variant="subtitle2" color="text.secondary">
+        <Typography color="text.secondary" sx={{ fontSize: 14 }}>
           Date: {rental.rentalDate}
         </Typography>
       </Box>

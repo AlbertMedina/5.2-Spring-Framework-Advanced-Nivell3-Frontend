@@ -6,6 +6,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 export default function StarRatingInput({
   value,
   onChange,
+  fontSize = 20,
   color = "primary",
 }) {
   const [hover, setHover] = useState(0);
@@ -21,9 +22,9 @@ export default function StarRatingInput({
           onMouseLeave={() => setHover(0)}
         >
           {star <= (hover || value) ? (
-            <StarIcon color={color} />
+            <StarIcon sx={{ fontSize, color }} />
           ) : (
-            <StarBorderIcon color={color} />
+            <StarBorderIcon sx={{ fontSize, color }} />
           )}
         </IconButton>
       ))}

@@ -61,19 +61,24 @@ export default function AddReviewModal({
           }}
         >
           <Box sx={{ mb: 2 }}>
-            <Typography gutterBottom color="#3e0b00">
+            <Typography gutterBottom color="#3e0b00" sx={{ fontSize: 18 }}>
               <strong>Rating:</strong>
             </Typography>
             <StarRatingInput value={rating} onChange={setRating} />
           </Box>
 
           <TextField
+            label="Comment"
             fullWidth
             multiline
             rows={3}
-            label="Comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            sx={{
+              width: "100%",
+              "& .MuiInputBase-input": { fontSize: 16 },
+              "& .MuiInputLabel-root": { fontSize: 16 },
+            }}
           />
 
           <Box
@@ -88,6 +93,7 @@ export default function AddReviewModal({
               onClick={onClose}
               variant="outlined"
               sx={{
+                fontSize: 12,
                 color: "#3e0b00",
                 borderColor: "#3e0b00",
                 bgcolor: "#f5f5f5",
@@ -104,6 +110,7 @@ export default function AddReviewModal({
               onClick={handleSubmit}
               disabled={rating === 0 || comment.trim() === "" || loading}
               sx={{
+                fontSize: 12,
                 bgcolor: "#3e0b00",
                 color: "#f5f5f5",
                 "&:hover": {

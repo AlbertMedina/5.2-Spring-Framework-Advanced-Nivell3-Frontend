@@ -3,13 +3,18 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import backgroundImage from "../../assets/background-movie-default.webp";
 
-export default function AddMovieCard({ onClick }) {
+export default function AddMovieCard({
+  onClick,
+  width = 250,
+  aspectRatio = "2 / 3",
+  fontSize = 80,
+}) {
   return (
     <ButtonBase
       onClick={onClick}
       sx={{
-        width: 250,
-        height: 380,
+        width,
+        aspectRatio,
         borderRadius: 2,
         overflow: "hidden",
         display: "block",
@@ -47,7 +52,7 @@ export default function AddMovieCard({ onClick }) {
             left: "50%",
             transform: "translate(-50%, -50%) scale(1.0)",
             color: "white",
-            fontSize: 100,
+            fontSize,
             transition: "transform 0.4s ease",
           }}
         />

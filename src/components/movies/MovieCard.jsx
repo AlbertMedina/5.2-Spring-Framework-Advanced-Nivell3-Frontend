@@ -7,7 +7,13 @@ import StarRatingDisplay from "../movies/StarRatingDisplay";
 
 import defaultPoster from "../../assets/background-movie-default.webp";
 
-export default function MovieCard({ movie, onClick }) {
+export default function MovieCard({
+  movie,
+  onClick,
+  width = 250,
+  aspectRatio = "2 / 3",
+  fontSize = 16,
+}) {
   const [hasPosterError, setHasPosterError] = useState(false);
 
   useEffect(() => {
@@ -18,8 +24,8 @@ export default function MovieCard({ movie, onClick }) {
     <ButtonBase
       onClick={onClick}
       sx={{
-        width: 250,
-        aspectRatio: "2 / 3",
+        width,
+        aspectRatio,
         textAlign: "left",
         borderRadius: 2,
         overflow: "hidden",
@@ -99,11 +105,15 @@ export default function MovieCard({ movie, onClick }) {
               gap: 1,
             }}
           >
-            <Typography variant="h6">{movie.title}</Typography>
-            <Typography variant="body2">
+            <Typography sx={{ fontSize, fontWeight: "bold" }}>
+              {movie.title}
+            </Typography>
+            <Typography sx={{ fontSize: fontSize * 0.9 }}>
               {movie.genre} | {movie.year} | {movie.duration} min
             </Typography>
-            <Typography variant="body2">Director: {movie.director}</Typography>
+            <Typography sx={{ fontSize: fontSize * 0.9 }}>
+              Director: {movie.director}
+            </Typography>
             <Box
               sx={{
                 display: "flex",
@@ -114,9 +124,10 @@ export default function MovieCard({ movie, onClick }) {
             >
               <StarRatingDisplay
                 rating={movie.rating.average}
+                fontSize={fontSize}
                 color="secondary"
               />
-              <Typography variant="body2">({movie.rating.count})</Typography>
+              <Typography sx={{ fontSize }}>({movie.rating.count})</Typography>
             </Box>
           </Box>
         </Box>

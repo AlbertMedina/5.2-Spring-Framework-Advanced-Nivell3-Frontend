@@ -6,7 +6,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 export default function StarRatingDisplay({
   rating,
   maxRating = 5,
-  size = "medium",
+  fontSize = 16,
   color = "primary",
 }) {
   const roundedRating = Math.round(rating * 2) / 2;
@@ -14,11 +14,11 @@ export default function StarRatingDisplay({
   const stars = [];
   for (let i = 1; i <= maxRating; i++) {
     if (i <= roundedRating) {
-      stars.push(<StarIcon key={i} fontSize={size} color={color} />);
+      stars.push(<StarIcon key={i} sx={{ fontSize, color }} />);
     } else if (i - 0.5 === roundedRating) {
-      stars.push(<StarHalfIcon key={i} fontSize={size} color={color} />);
+      stars.push(<StarHalfIcon key={i} sx={{ fontSize, color }} />);
     } else {
-      stars.push(<StarBorderIcon key={i} fontSize={size} color={color} />);
+      stars.push(<StarBorderIcon key={i} sx={{ fontSize, color }} />);
     }
   }
 

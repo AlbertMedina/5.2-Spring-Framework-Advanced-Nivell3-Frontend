@@ -108,7 +108,8 @@ export default function Movies() {
     return (
       <Box
         sx={{
-          minHeight: "100vh",
+          flexGrow: 1,
+          minHeight: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -125,104 +126,99 @@ export default function Movies() {
   return (
     <Box
       sx={{
-        maxWidth: 1800,
-        mx: "auto",
-        textAlign: "center",
+        maxWidth: "80%",
         display: "flex",
         flexDirection: "column",
-        height: "85vh",
-        justifyContent: "space-between",
+        gap: 5,
+        mx: "auto",
       }}
     >
-      <Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 2,
-          }}
-        >
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <SearchBox
-              value={titleFilter}
-              onChange={(newText) => {
-                setTitleFilter(newText);
-                setPage(0);
-              }}
-              placeholder="Search by title"
-              width={400}
-            />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 2,
+        }}
+      >
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <SearchBox
+            value={titleFilter}
+            onChange={(newText) => {
+              setTitleFilter(newText);
+              setPage(0);
+            }}
+            placeholder="Search by title"
+            width={300}
+          />
 
-            <GenreSelector
-              genres={genres}
-              value={genreFilter}
-              onChange={(newGenre) => {
-                setGenreFilter(newGenre);
-                setPage(0);
-              }}
-              width={150}
-            />
-          </Box>
-
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <SortToggle
-              sortBy={sortBy}
-              ascending={ascending}
-              onSortByChange={(newSort) => setSortBy(newSort)}
-              onToggleOrder={() => setAscending(!ascending)}
-              width={150}
-            />
-
-            <HideUnavailableCheckbox
-              checked={onlyAvailable}
-              onChange={(newValue) => {
-                setOnlyAvailable(newValue);
-                setPage(0);
-              }}
-            />
-          </Box>
+          <GenreSelector
+            genres={genres}
+            value={genreFilter}
+            onChange={(newGenre) => {
+              setGenreFilter(newGenre);
+              setPage(0);
+            }}
+          />
         </Box>
 
-        <Grid
-          container
-          spacing={6}
-          justifyContent="center"
-          sx={{ mt: 6, columnGap: 16 }}
-        >
-          {isAdmin && (
-            <Grid>
-              <AddMovieCard onClick={() => setOpenAddModal(true)} />
-            </Grid>
-          )}
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <SortToggle
+            sortBy={sortBy}
+            ascending={ascending}
+            onSortByChange={(newSort) => setSortBy(newSort)}
+            onToggleOrder={() => setAscending(!ascending)}
+            width={150}
+          />
 
-          {loading ? (
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                mt: 4,
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          ) : (
-            movies.map((movie) => (
-              <Grid key={movie.id}>
-                <MovieCard
-                  movie={movie}
-                  onClick={() => handleMovieClick(movie.id)}
-                />
-              </Grid>
-            ))
-          )}
-        </Grid>
+          <HideUnavailableCheckbox
+            checked={onlyAvailable}
+            onChange={(newValue) => {
+              setOnlyAvailable(newValue);
+              setPage(0);
+            }}
+          />
+        </Box>
       </Box>
+
+      <Grid
+        container
+        spacing={3}
+        justifyContent="center"
+        sx={{ columnGap: 14 }}
+      >
+        {isAdmin && (
+          <Grid>
+            <AddMovieCard onClick={() => setOpenAddModal(true)} width={180} />
+          </Grid>
+        )}
+
+        {loading ? (
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              mt: 4,
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          movies.map((movie) => (
+            <Grid key={movie.id}>
+              <MovieCard
+                movie={movie}
+                onClick={() => handleMovieClick(movie.id)}
+                width={180}
+              />
+            </Grid>
+          ))
+        )}
+      </Grid>
 
       <Box
         sx={{
-          mt: 4,
           display: "flex",
           justifyContent: "center",
           gap: 2,
@@ -232,25 +228,24 @@ export default function Movies() {
         <IconButton
           disabled={page === 0}
           onClick={() => handlePageChange(page - 1)}
-          size="large"
           sx={{ color: "#3e0b00" }}
         >
-          <ArrowBackIosNewIcon fontSize="large" />
+          <ArrowBackIosNewIcon sx={{ fontSize: 24 }} />
         </IconButton>
 
         <Typography
           sx={{
-            mt: 1,
             color: "#3e0b00",
+            fontSize: 16,
             fontWeight: "bold",
           }}
         >
           PAGE{" "}
-          <Box component="span" sx={{ fontSize: "1.2em" }}>
+          <Box component="span" sx={{ fontSize: 16 }}>
             {page + 1}
           </Box>{" "}
           OF{" "}
-          <Box component="span" sx={{ fontSize: "1.2em" }}>
+          <Box component="span" sx={{ fontSize: 16 }}>
             {Math.max(totalPages, 1)}
           </Box>
         </Typography>
@@ -258,10 +253,9 @@ export default function Movies() {
         <IconButton
           disabled={!hasNext}
           onClick={() => handlePageChange(page + 1)}
-          size="large"
           sx={{ color: "#3e0b00" }}
         >
-          <ArrowForwardIosIcon fontSize="large" />
+          <ArrowForwardIosIcon sx={{ fontSize: 24 }} />
         </IconButton>
       </Box>
 

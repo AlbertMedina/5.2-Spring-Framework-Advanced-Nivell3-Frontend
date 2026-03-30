@@ -16,7 +16,9 @@ export default function SortToggle({
   onSortByChange,
   onToggleOrder,
   options = ["TITLE", "RATING"],
-  width = 150,
+  minWidth = 150,
+  height = 40,
+  fontSize = 16,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -27,6 +29,8 @@ export default function SortToggle({
     handleMenuClose();
   };
 
+  const Icon = ascending ? ArrowUpwardIcon : ArrowDownwardIcon;
+
   return (
     <Box
       sx={{
@@ -36,7 +40,8 @@ export default function SortToggle({
         overflow: "hidden",
         boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         bgcolor: "#3e0b00",
-        width,
+        minWidth,
+        height,
       }}
     >
       <Button
@@ -51,7 +56,9 @@ export default function SortToggle({
           textOverflow: "ellipsis",
         }}
       >
-        <Typography sx={{ fontWeight: 500, textAlign: "center", flex: 1 }}>
+        <Typography
+          sx={{ fontSize, fontWeight: 500, textAlign: "center", flex: 1 }}
+        >
           {sortBy === "TITLE" ? "Title" : "Rating"}
         </Typography>
       </Button>
@@ -64,7 +71,7 @@ export default function SortToggle({
           "& .MuiPaper-root": {
             bgcolor: "#6A1F0F",
             color: "#f5f5f5",
-            minWidth: 120,
+            minWidth,
           },
         }}
       >
@@ -72,14 +79,14 @@ export default function SortToggle({
           <MenuItem
             key={opt}
             onClick={() => handleSelectOption(opt)}
-            sx={{ "&:hover": { bgcolor: "#3e0b00" } }}
+            sx={{ fontSize, "&:hover": { bgcolor: "#3e0b00" } }}
           >
             {opt === "TITLE" ? "Title" : "Rating"}
           </MenuItem>
         ))}
       </Menu>
 
-      <Tooltip title={ascending ? "Ascending" : "Descending"}>
+      <Tooltip>
         <Button
           onClick={onToggleOrder}
           sx={{
@@ -88,7 +95,7 @@ export default function SortToggle({
             "&:hover": { bgcolor: "#6A1F0F" },
           }}
         >
-          {ascending ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
+          <Icon sx={{ fontSize: fontSize * 1.3 }} />
         </Button>
       </Tooltip>
     </Box>

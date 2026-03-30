@@ -3,7 +3,14 @@ import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
 
 import { capitalizeWords } from "../../utils/stringUtils";
 
-export default function GenreSelector({ genres = [], value, onChange }) {
+export default function GenreSelector({
+  genres = [],
+  value,
+  onChange,
+  minWidth = 150,
+  height = 40,
+  fontSize = 16,
+}) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleOpen = (event) => setAnchorEl(event.currentTarget);
@@ -22,7 +29,8 @@ export default function GenreSelector({ genres = [], value, onChange }) {
         boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         bgcolor: "#3e0b00",
         overflow: "hidden",
-        minWidth: 80,
+        minWidth,
+        height,
       }}
     >
       <Button
@@ -35,7 +43,9 @@ export default function GenreSelector({ genres = [], value, onChange }) {
           whiteSpace: "nowrap",
         }}
       >
-        <Typography sx={{ fontWeight: 500, textAlign: "center", flex: 1 }}>
+        <Typography
+          sx={{ fontSize, fontWeight: 500, textAlign: "center", flex: 1 }}
+        >
           {value ? capitalizeWords(value) : "All Genres"}
         </Typography>
       </Button>
@@ -54,7 +64,7 @@ export default function GenreSelector({ genres = [], value, onChange }) {
       >
         <MenuItem
           onClick={() => handleSelect("")}
-          sx={{ "&:hover": { bgcolor: "#3e0b00" } }}
+          sx={{ fontSize, "&:hover": { bgcolor: "#3e0b00" } }}
         >
           All
         </MenuItem>
@@ -63,7 +73,7 @@ export default function GenreSelector({ genres = [], value, onChange }) {
           <MenuItem
             key={g}
             onClick={() => handleSelect(g)}
-            sx={{ "&:hover": { bgcolor: "#3e0b00" } }}
+            sx={{ fontSize, "&:hover": { bgcolor: "#3e0b00" } }}
           >
             {capitalizeWords(g)}
           </MenuItem>

@@ -14,7 +14,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { getAllMovies, getGenres } from "../services/api";
 import AuthContext from "../services/auth.context";
 
-import { capitalizeWords } from "../../utils/stringUtils";
+import { capitalizeWords } from "../utils/stringUtils";
 
 import MovieCard from "../components/movies/MovieCard";
 import Selector from "../components/movies/Selector.jsx";

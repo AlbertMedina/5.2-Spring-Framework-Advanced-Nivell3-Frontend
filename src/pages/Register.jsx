@@ -76,7 +76,7 @@ export default function Register() {
             type="text"
             size="small"
             fullWidth
-            margin="normal"
+            margin="dense"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -86,7 +86,7 @@ export default function Register() {
             type="text"
             size="small"
             fullWidth
-            margin="normal"
+            margin="dense"
             required
             value={surname}
             onChange={(e) => setSurname(e.target.value)}
@@ -96,7 +96,7 @@ export default function Register() {
             type="text"
             size="small"
             fullWidth
-            margin="normal"
+            margin="dense"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -106,7 +106,7 @@ export default function Register() {
             type="email"
             size="small"
             fullWidth
-            margin="normal"
+            margin="dense"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -116,7 +116,7 @@ export default function Register() {
             type="password"
             size="small"
             fullWidth
-            margin="normal"
+            margin="dense"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}

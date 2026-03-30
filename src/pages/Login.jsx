@@ -75,7 +75,7 @@ export default function Login() {
             type="text"
             size="small"
             fullWidth
-            margin="normal"
+            margin="dense"
             required
             value={loginIdentifier}
             onChange={(e) => setLoginIdentifier(e.target.value)}
@@ -85,7 +85,7 @@ export default function Login() {
             type="password"
             size="small"
             fullWidth
-            margin="normal"
+            margin="dense"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}

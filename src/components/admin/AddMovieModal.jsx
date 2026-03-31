@@ -126,10 +126,9 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
           <Box
             sx={{
               flexShrink: 0,
-              width: 410,
+              width: 320,
               display: "flex",
               flexDirection: "column",
-              gap: 2,
               alignItems: "center",
             }}
           >
@@ -145,7 +144,11 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
                   justifyContent: "center",
                 }}
               >
-                <Button variant="contained" component="label">
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{ fontSize: 14 }}
+                >
                   Upload Poster
                   <input
                     type="file"
@@ -181,6 +184,7 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
                 />
                 <IconButton
                   onClick={handleRemovePoster}
+                  size="small"
                   sx={{
                     position: "absolute",
                     top: 8,
@@ -197,11 +201,21 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
           </Box>
 
           <Box
-            sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}
+            sx={{
+              width: "100%",
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              "& .MuiInputBase-input": { fontSize: 16 },
+              "& .MuiInputLabel-root": { fontSize: 16 },
+            }}
           >
             <TextField
               label="Title"
               name="title"
+              size="small"
+              fullWidth
               value={newMovie.title}
               onChange={handleChange}
             />
@@ -209,12 +223,16 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
               label="Year"
               name="year"
               type="number"
+              size="small"
+              fullWidth
               value={newMovie.year}
               onChange={handleChange}
             />
             <TextField
               label="Genre"
               name="genre"
+              size="small"
+              fullWidth
               value={newMovie.genre}
               onChange={handleChange}
             />
@@ -222,18 +240,24 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
               label="Duration"
               name="duration"
               type="number"
+              size="small"
+              fullWidth
               value={newMovie.duration}
               onChange={handleChange}
             />
             <TextField
               label="Director"
               name="director"
+              size="small"
+              fullWidth
               value={newMovie.director}
               onChange={handleChange}
             />
             <TextField
               label="Synopsis"
               name="synopsis"
+              size="small"
+              fullWidth
               value={newMovie.synopsis}
               onChange={handleChange}
               multiline
@@ -243,6 +267,8 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
               label="Number of Copies"
               name="copies"
               type="number"
+              size="small"
+              fullWidth
               value={newMovie.copies}
               onChange={handleChange}
             />
@@ -263,6 +289,7 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
             onClick={onClose}
             variant="outlined"
             sx={{
+              fontSize: 12,
               color: "#3e0b00",
               borderColor: "#3e0b00",
               bgcolor: "#f5f5f5",
@@ -279,6 +306,7 @@ export default function AddMovieModal({ open, onClose, token, onMovieAdded }) {
             variant="contained"
             disabled={loading}
             sx={{
+              fontSize: 12,
               bgcolor: "#3e0b00",
               color: "#f5f5f5",
               "&:hover": {

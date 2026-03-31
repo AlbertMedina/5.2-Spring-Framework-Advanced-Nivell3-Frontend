@@ -160,7 +160,6 @@ export default function MovieDetailsCard({
           >
             <Typography
               fontSize={32}
-              variant="h4"
               gutterBottom
               sx={{ wordBreak: "break-word" }}
             >

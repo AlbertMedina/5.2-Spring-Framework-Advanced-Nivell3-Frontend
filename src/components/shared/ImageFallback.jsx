@@ -19,10 +19,7 @@ export default function ImageFallback() {
       }}
     >
       <BrokenImageIcon sx={{ fontSize: 48, mb: 1 }} />
-      <Typography
-        variant="caption"
-        sx={{ fontSize: "large", fontWeight: "bold" }}
-      >
+      <Typography sx={{ fontSize: 16, fontWeight: "bold" }}>
         Error loading image
       </Typography>
     </Box>

@@ -57,7 +57,7 @@ export default function Login() {
           boxShadow: 20,
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography fontSize={32} component="h1" gutterBottom>
           LOGIN
         </Typography>
         <Box

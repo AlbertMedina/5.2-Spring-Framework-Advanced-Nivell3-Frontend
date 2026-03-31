@@ -65,7 +65,7 @@ export default function Nav() {
                 },
               }}
             >
-              <Typography variant="body1">{link.label}</Typography>
+              <Typography fontSize={18}>{link.label}</Typography>
             </Button>
           ))}
         </Box>

@@ -100,7 +100,7 @@ export default function UpdateMoviePosterModal({
           <Box
             sx={{
               flexShrink: 0,
-              width: 410,
+              width: 320,
               display: "flex",
               flexDirection: "column",
               gap: 2,
@@ -119,7 +119,11 @@ export default function UpdateMoviePosterModal({
                   justifyContent: "center",
                 }}
               >
-                <Button variant="contained" component="label">
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{ fontSize: 12 }}
+                >
                   Upload Poster
                   <input
                     type="file"
@@ -154,6 +158,7 @@ export default function UpdateMoviePosterModal({
                   }}
                 />
                 <IconButton
+                  size="small"
                   onClick={handleRemovePoster}
                   sx={{
                     position: "absolute",
@@ -164,7 +169,7 @@ export default function UpdateMoviePosterModal({
                     "&:hover": { backgroundColor: "rgba(0,0,0,0.8)" },
                   }}
                 >
-                  <DeleteIcon fontSize="large" />
+                  <DeleteIcon fontSize="medium" />
                 </IconButton>
               </Box>
             )}
@@ -185,6 +190,7 @@ export default function UpdateMoviePosterModal({
             onClick={onClose}
             variant="outlined"
             sx={{
+              fontSize: 12,
               color: "#3e0b00",
               borderColor: "#3e0b00",
               bgcolor: "#f5f5f5",
@@ -201,6 +207,7 @@ export default function UpdateMoviePosterModal({
             variant="contained"
             disabled={loading || !hasChanges}
             sx={{
+              fontSize: 12,
               bgcolor: "#3e0b00",
               color: "#f5f5f5",
               "&:hover": {

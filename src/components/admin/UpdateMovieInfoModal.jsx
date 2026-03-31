@@ -100,24 +100,30 @@ export default function UpdateMovieInfoModal({
       >
         <DialogContent
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
             pt: 4,
             pb: 2,
             pr: 4,
             pl: 4,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            "& .MuiInputBase-input": { fontSize: 16 },
+            "& .MuiInputLabel-root": { fontSize: 16 },
           }}
         >
           <TextField
             label="Title"
             name="title"
+            size="small"
+            margin="dense"
             value={updatedMovie.title}
             onChange={handleChange}
           />
           <TextField
             label="Year"
             name="year"
+            size="small"
+            margin="dense"
             type="number"
             value={updatedMovie.year}
             onChange={handleChange}
@@ -125,12 +131,16 @@ export default function UpdateMovieInfoModal({
           <TextField
             label="Genre"
             name="genre"
+            size="small"
+            margin="dense"
             value={updatedMovie.genre}
             onChange={handleChange}
           />
           <TextField
             label="Duration (min)"
             name="duration"
+            size="small"
+            margin="dense"
             type="number"
             value={updatedMovie.duration}
             onChange={handleChange}
@@ -138,12 +148,16 @@ export default function UpdateMovieInfoModal({
           <TextField
             label="Director"
             name="director"
+            size="small"
+            margin="dense"
             value={updatedMovie.director}
             onChange={handleChange}
           />
           <TextField
             label="Synopsis"
             name="synopsis"
+            size="small"
+            margin="dense"
             value={updatedMovie.synopsis}
             onChange={handleChange}
             multiline
@@ -165,6 +179,7 @@ export default function UpdateMovieInfoModal({
             onClick={onClose}
             variant="outlined"
             sx={{
+              fontSize: 12,
               color: "#3e0b00",
               borderColor: "#3e0b00",
               bgcolor: "#f5f5f5",
@@ -181,6 +196,7 @@ export default function UpdateMovieInfoModal({
             variant="contained"
             disabled={loading || !hasChanges}
             sx={{
+              fontSize: 12,
               bgcolor: "#3e0b00",
               color: "#f5f5f5",
               "&:hover": {

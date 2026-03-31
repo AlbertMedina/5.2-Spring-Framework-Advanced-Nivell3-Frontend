@@ -141,7 +141,7 @@ export default function Movies() {
   return (
     <Box
       sx={{
-        maxWidth: "80%",
+        width: "80%",
         display: "flex",
         flexDirection: "column",
         gap: 5,
@@ -234,47 +234,68 @@ export default function Movies() {
         )}
       </Grid>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          gap: 2,
-          alignItems: "center",
-        }}
-      >
-        <IconButton
-          disabled={page === 0}
-          onClick={() => handlePageChange(page - 1)}
-          sx={{ color: "#3e0b00" }}
-        >
-          <ArrowBackIosNewIcon sx={{ fontSize: 24 }} />
-        </IconButton>
-
-        <Typography
+      {movies.length > 0 ? (
+        <Box
           sx={{
-            color: "#3e0b00",
-            fontSize: 16,
-            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            alignItems: "center",
           }}
         >
-          PAGE{" "}
-          <Box component="span" sx={{ fontSize: 16 }}>
-            {page + 1}
-          </Box>{" "}
-          OF{" "}
-          <Box component="span" sx={{ fontSize: 16 }}>
-            {Math.max(totalPages, 1)}
-          </Box>
-        </Typography>
+          <IconButton
+            disabled={page === 0}
+            onClick={() => handlePageChange(page - 1)}
+            sx={{ color: "#3e0b00" }}
+          >
+            <ArrowBackIosNewIcon sx={{ fontSize: 24 }} />
+          </IconButton>
 
-        <IconButton
-          disabled={!hasNext}
-          onClick={() => handlePageChange(page + 1)}
-          sx={{ color: "#3e0b00" }}
+          <Typography
+            sx={{
+              color: "#3e0b00",
+              fontSize: 16,
+              fontWeight: "bold",
+            }}
+          >
+            PAGE{" "}
+            <Box component="span" sx={{ fontSize: 16 }}>
+              {page + 1}
+            </Box>{" "}
+            OF{" "}
+            <Box component="span" sx={{ fontSize: 16 }}>
+              {Math.max(totalPages, 1)}
+            </Box>
+          </Typography>
+
+          <IconButton
+            disabled={!hasNext}
+            onClick={() => handlePageChange(page + 1)}
+            sx={{ color: "#3e0b00" }}
+          >
+            <ArrowForwardIosIcon sx={{ fontSize: 24 }} />
+          </IconButton>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            alignItems: "center",
+          }}
         >
-          <ArrowForwardIosIcon sx={{ fontSize: 24 }} />
-        </IconButton>
-      </Box>
+          <Typography
+            sx={{
+              fontSize: 20,
+              color: "#3e0b00",
+              fontWeight: "bold",
+            }}
+          >
+            No movies found
+          </Typography>
+        </Box>
+      )}
 
       <AddMovieModal
         open={openAddModal}
